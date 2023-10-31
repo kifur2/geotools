@@ -26,7 +26,9 @@ import org.geotools.util.factory.Hints;
 public class ArrayConverterFactory implements ConverterFactory {
     @Override
     public Converter createConverter(Class<?> source, Class<?> target, Hints hints) {
-        if (source.isArray()
+        if (source.isArray() && target.equals(String.class)) {
+            return new ArrayToStringConverter();
+        } else if (source.isArray()
                 && !target.isArray()
                 && source.getComponentType().isAssignableFrom(target)) {
             return new ArrayToSingleConverter();
@@ -76,6 +78,25 @@ public class ArrayConverterFactory implements ConverterFactory {
                 Array.set(result, count, converted);
             }
             return target.cast(result);
+        }
+    }
+
+    private static class ArrayToStringConverter implements Converter {
+        @Override
+        public <T> T convert(Object source, Class<T> target) throws Exception {
+            StringBuilder sb = new StringBuilder("[");
+            int arrLength = Array.getLength(source);
+            for (int count = 0; count < arrLength; count++) {
+                Object sourceElement = Array.get(source, count);
+                if (sourceElement != null) {
+                    sb.append(sourceElement.toString());
+                    if (count < arrLength - 1) {
+                        sb.append(", ");
+                    }
+                }
+            }
+            sb.append("]");
+            return target.cast(sb.toString());
         }
     }
 }

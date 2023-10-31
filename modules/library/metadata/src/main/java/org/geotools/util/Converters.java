@@ -180,7 +180,7 @@ public final class Converters {
      * @return A collection of converter factories.
      * @since 2.4
      */
-    static ConverterFactory[] factories() {
+    public static ConverterFactory[] factories() {
         if (factories == null) {
             Collection<ConverterFactory> factoryCollection =
                     getConverterFactories(GeoTools.getDefaultHints());

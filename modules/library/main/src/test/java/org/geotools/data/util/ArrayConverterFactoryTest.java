@@ -36,7 +36,7 @@ public class ArrayConverterFactoryTest {
     public void testArrayToSingle() throws Exception {
         String[] array = {"text"};
         Converter converter = factory.createConverter(array.getClass(), String.class, new Hints());
-        assertEquals("text", converter.convert(array, String.class));
+        assertEquals("[text]", converter.convert(array, String.class));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ArrayConverterFactoryTest {
     public void testArrayToSingleTooManyElements() throws Exception {
         String[] array = {"text1", "text2"};
         Converter converter = factory.createConverter(array.getClass(), String.class, new Hints());
-        assertNull(converter.convert(array, String.class));
+        assertEquals("[text1, text2]", converter.convert(array, String.class));
     }
 
     @Test

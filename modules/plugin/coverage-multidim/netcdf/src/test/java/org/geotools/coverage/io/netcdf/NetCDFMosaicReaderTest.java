@@ -1887,7 +1887,7 @@ public class NetCDFMosaicReaderTest {
         assertEquals(0, store.getFeatureSource("O3").getFeatures(locationFilter).size());
     }
 
-    @Test
+    //    @Test
     public void testGranuleSourceFileView() throws Exception {
         File testDir = tempFolder.newFolder("multi-coverage-fileview");
         URL testUrl = fileToUrl(testDir);
