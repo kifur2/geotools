@@ -19,6 +19,8 @@ package org.geotools.styling.visitor;
 
 import static org.geotools.filter.capability.FunctionNameImpl.parameter;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 import org.geotools.api.filter.capability.FunctionName;
@@ -55,6 +57,15 @@ public class RescaleToPixelsFunction extends FunctionExpressionImpl {
     public Object evaluate(Object feature) {
 
         String value = getExpression(0).evaluate(feature, String.class);
+
+        Pattern pattern = Pattern.compile("\\[([^,]+)\\]");
+        Matcher matcher = pattern.matcher(value);
+
+        // if the value is an array of 1 element then we change it to the element
+        if (matcher.find()) {
+            value = matcher.group(1);
+        }
+
         if (value == null || value.trim().isEmpty()) {
             return null;
         }

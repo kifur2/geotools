@@ -992,7 +992,12 @@ public class SimpleFeatureTypeBuilder {
 
         // add attributes in order
         for (String type : types) {
+            String typeCopy = type;
+            if (!type.startsWith("gml:") && type.contains("[") && type.endsWith("]")) {
+                type = type.substring(0, type.indexOf("["));
+            }
             b.add(original.getDescriptor(type));
+            type = typeCopy;
         }
 
         // handle default geometry

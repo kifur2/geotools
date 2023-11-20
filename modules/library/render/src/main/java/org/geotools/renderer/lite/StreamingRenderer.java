@@ -113,6 +113,7 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.SchemaException;
+import org.geotools.filter.AttributeExpressionImpl;
 import org.geotools.filter.IllegalFilterException;
 import org.geotools.filter.function.EnvFunction;
 import org.geotools.filter.function.GeometryTransformationVisitor;
@@ -1595,8 +1596,14 @@ public class StreamingRenderer implements GTRenderer {
         // first off, check how many crs we have, this hint works only
         // if we have just one native CRS at hand (and the native CRS is known
         CoordinateReferenceSystem crs = null;
-        // NC - property (namespace) support
+        List<PropertyName> attNamesCopy = new ArrayList<>();
         for (PropertyName name : attNames) {
+            attNamesCopy.add(
+                    new AttributeExpressionImpl(
+                            name.getPropertyName(), name.getNamespaceContext()));
+        }
+        // NC - property (namespace) support
+        for (PropertyName name : attNamesCopy) {
             Object att = name.evaluate(schema);
 
             if (att instanceof GeometryDescriptor) {
@@ -2459,6 +2466,14 @@ public class StreamingRenderer implements GTRenderer {
         }
 
         for (PropertyName attribute : query.getProperties()) {
+
+            if (attribute.getPropertyName().contains("[")) {
+                attribute =
+                        new AttributeExpressionImpl(
+                                attribute
+                                        .getPropertyName()
+                                        .substring(0, attribute.getPropertyName().indexOf("[")));
+            }
             if (attribute.evaluate(schema) == null) {
                 if (schema instanceof SimpleFeatureType) {
                     List<Name> allNames = new ArrayList<>();

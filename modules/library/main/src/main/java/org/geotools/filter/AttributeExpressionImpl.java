@@ -201,6 +201,12 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
 
         Object value = false;
         boolean success = false;
+        String attPathCopy = attPath;
+
+        if (!attPath.startsWith("gml:") && attPath.contains("[") && attPath.endsWith("]")) {
+            attPath = attPath.substring(0, attPath.indexOf("["));
+        }
+
         if (accessor != null && accessor.canHandle(obj, attPath, target)) {
             try {
                 value = accessor.get(obj, attPath, target);
@@ -234,6 +240,7 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
                     }
                 }
             }
+            attPath = attPathCopy;
 
             if (!success) {
                 if (lenient) return null;
