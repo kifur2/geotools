@@ -28,6 +28,7 @@ import org.geotools.api.style.ContrastMethodStrategy;
 import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.expression.ExpressionAbstract;
 
 /**
  * The ContrastEnhancement object defines contrast enhancement for a channel of a false-color image
@@ -243,5 +244,16 @@ public class ContrastEnhancementImpl implements org.geotools.api.style.ContrastE
             return false;
         }
         return true;
+    }
+
+    public void propagateTabIndex(int index) {
+        for (Expression expression : options.values()) {
+            if (expression instanceof ExpressionAbstract) {
+                ((ExpressionAbstract) expression).propagateTabIndex(index);
+            }
+        }
+        if (gamma != null && gamma instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) gamma).propagateTabIndex(index);
+        }
     }
 }

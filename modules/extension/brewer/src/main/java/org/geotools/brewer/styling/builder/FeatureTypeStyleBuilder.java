@@ -25,10 +25,7 @@ import java.util.Set;
 import org.geotools.api.feature.type.Name;
 import org.geotools.api.filter.Id;
 import org.geotools.api.filter.expression.Expression;
-import org.geotools.api.style.Description;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SemanticType;
+import org.geotools.api.style.*;
 import org.geotools.brewer.styling.filter.IdBuilder;
 import org.geotools.feature.NameImpl;
 
@@ -36,6 +33,7 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
     String name;
 
     List<RuleBuilder> rules = new ArrayList<>();
+    List<LoopBuilder> loops = new ArrayList<>();
 
     DescriptionBuilder description = new DescriptionBuilder().unset();
 
@@ -64,6 +62,12 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
         RuleBuilder ruleBuilder = new RuleBuilder(this);
         rules.add(ruleBuilder);
         return ruleBuilder;
+    }
+
+    public LoopBuilder loop() {
+        LoopBuilder loopBuilder = new LoopBuilder(this);
+        loops.add(loopBuilder);
+        return loopBuilder;
     }
 
     public FeatureTypeStyleBuilder name(String name) {
@@ -98,10 +102,23 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
         return rules;
     }
 
+    public List<LoopBuilder> loops() {
+        unset = false;
+        return loops;
+    }
+
     public FeatureTypeStyleBuilder rules(List<Rule> rules) {
         unset = false;
         for (Rule rule : rules) {
             this.rules.add(new RuleBuilder(this).reset(rule));
+        }
+        return this;
+    }
+
+    public FeatureTypeStyleBuilder loops(List<Loop> loops) {
+        unset = false;
+        for (Loop loop : loops) {
+            this.loops.add(new LoopBuilder(this).reset(loop));
         }
         return this;
     }
@@ -158,9 +175,13 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
         if (unset) {
             return null;
         }
-        List<org.geotools.api.style.Rule> list = new ArrayList<>();
+        List<org.geotools.api.style.Rule> rulesList = new ArrayList<>();
+        List<Loop> loopsList = new ArrayList<>();
         for (RuleBuilder ruleBuilder : rules) {
-            list.add(ruleBuilder.build());
+            rulesList.add(ruleBuilder.build());
+        }
+        for (LoopBuilder loopBuilder : loops) {
+            loopsList.add(loopBuilder.build());
         }
         FeatureTypeStyle fts =
                 sf.featureTypeStyle(
@@ -169,7 +190,8 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
                         definedFor.build(),
                         featureTypeNames,
                         types,
-                        list);
+                        rulesList,
+                        loopsList);
         if (!options.isEmpty()) {
             fts.getOptions().putAll(options);
         }
@@ -183,11 +205,13 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
     @Override
     public FeatureTypeStyleBuilder reset() {
         rules.clear();
+        loops.clear();
         this.name = null;
         this.description.reset();
         this.definedFor.reset();
         this.featureTypeNames.clear();
         this.rules.clear();
+        this.loops.clear();
         this.options.clear();
         this.transformation = null;
 
@@ -213,6 +237,12 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
                 this.rules.add(new RuleBuilder(this).reset(rule));
             }
         }
+        this.loops.clear();
+        if (fts.loops() != null) {
+            for (Loop loop : fts.loops()) {
+                this.loops.add(new LoopBuilder(this).reset(loop));
+            }
+        }
         this.options.clear();
         this.options.putAll(fts.getOptions());
         this.transformation = fts.getTransformation();
@@ -236,6 +266,7 @@ public class FeatureTypeStyleBuilder extends AbstractStyleBuilder<FeatureTypeSty
         this.featureTypeNames = other.featureTypeNames;
         this.parent = other.parent;
         this.rules = other.rules;
+        this.loops = other.loops;
         this.sf = other.sf;
         this.types = other.types;
         this.options = other.options;

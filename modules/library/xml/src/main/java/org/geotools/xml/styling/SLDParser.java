@@ -43,66 +43,13 @@ import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.filter.expression.Function;
 import org.geotools.api.filter.expression.Literal;
 import org.geotools.api.filter.expression.PropertyName;
-import org.geotools.api.style.AnchorPoint;
-import org.geotools.api.style.ChannelSelection;
-import org.geotools.api.style.ColorMap;
-import org.geotools.api.style.ColorMapEntry;
-import org.geotools.api.style.ContrastEnhancement;
-import org.geotools.api.style.ContrastMethod;
-import org.geotools.api.style.ContrastMethodStrategy;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.FeatureTypeConstraint;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Font;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.GraphicLegend;
-import org.geotools.api.style.Halo;
-import org.geotools.api.style.LabelPlacement;
-import org.geotools.api.style.LinePlacement;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.Mark;
-import org.geotools.api.style.NamedLayer;
-import org.geotools.api.style.NamedStyle;
-import org.geotools.api.style.OtherText;
-import org.geotools.api.style.PointPlacement;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.RemoteOWS;
-import org.geotools.api.style.ResourceLocator;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SelectedChannelType;
-import org.geotools.api.style.SemanticType;
-import org.geotools.api.style.ShadedRelief;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.StyleFactory;
-import org.geotools.api.style.StyledLayer;
-import org.geotools.api.style.StyledLayerDescriptor;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
-import org.geotools.api.style.UserLayer;
+import org.geotools.api.style.*;
 import org.geotools.api.util.InternationalString;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.NameImpl;
 import org.geotools.filter.ExpressionDOMParser;
 import org.geotools.metadata.i18n.ErrorKeys;
-import org.geotools.styling.ContrastEnhancementImpl;
-import org.geotools.styling.DefaultResourceLocator;
-import org.geotools.styling.ExponentialContrastMethodStrategy;
-import org.geotools.styling.FeatureTypeConstraintImpl;
-import org.geotools.styling.HistogramContrastMethodStrategy;
-import org.geotools.styling.LogarithmicContrastMethodStrategy;
-import org.geotools.styling.NamedLayerImpl;
-import org.geotools.styling.NormalizeContrastMethodStrategy;
-import org.geotools.styling.OtherTextImpl;
-import org.geotools.styling.RemoteOWSImpl;
-import org.geotools.styling.SelectedChannelTypeImpl;
-import org.geotools.styling.ShadedReliefImpl;
-import org.geotools.styling.UomOgcMapping;
-import org.geotools.styling.UserLayerImpl;
+import org.geotools.styling.*;
 import org.geotools.util.Base64;
 import org.geotools.util.GrowableInternationalString;
 import org.geotools.util.SimpleInternationalString;
@@ -836,6 +783,7 @@ public class SLDParser {
 
         FeatureTypeStyle ft = factory.createFeatureTypeStyle();
         ArrayList<Rule> rules = new ArrayList<>();
+        ArrayList<Loop> loops = new ArrayList<>();
         ArrayList<String> sti = new ArrayList<>();
         NodeList children = style.getChildNodes();
         final int length = children.getLength();
@@ -876,6 +824,8 @@ public class SLDParser {
                 ft.setTransformation(tx);
             } else if (childName.equalsIgnoreCase(VendorOptionString)) {
                 parseVendorOption(ft.getOptions(), child);
+            } else if (childName.equalsIgnoreCase("Loop")) {
+                loops.add(parseLoop(child));
             }
         }
 
@@ -885,6 +835,8 @@ public class SLDParser {
         }
         ft.rules().clear();
         ft.rules().addAll(rules);
+        ft.loops().clear();
+        ft.loops().addAll(loops);
 
         return ft;
     }
@@ -980,6 +932,49 @@ public class SLDParser {
         rule.symbolizers().addAll(symbolizers);
 
         return rule;
+    }
+
+    protected Loop parseLoop(Node style) {
+        if (LOGGER.isLoggable(Level.FINEST)) {
+            LOGGER.finest("Parsing Loop " + style.getLocalName());
+        }
+
+        Loop loop = new LoopImpl();
+        if (style.getAttributes().getNamedItem("index_lower_than") != null)
+            loop.setMaxIndex(style.getAttributes().getNamedItem("index_lower_than").getNodeValue());
+        else throw new IllegalArgumentException("Loop must have index_lower_than attribute");
+
+        ArrayList<Rule> rules = new ArrayList<>();
+        NodeList children = style.getChildNodes();
+        final int length = children.getLength();
+        for (int i = 0; i < length; i++) {
+            Node child = children.item(i);
+
+            if ((child == null) || (child.getNodeType() != Node.ELEMENT_NODE)) {
+                continue;
+            }
+
+            if (LOGGER.isLoggable(Level.FINEST)) {
+                LOGGER.finest("processing " + child.getLocalName());
+            }
+            String childName = child.getLocalName();
+            if (childName == null) {
+                childName = child.getNodeName();
+            }
+
+            if (childName.equalsIgnoreCase("Name")) {
+                loop.setName(getFirstChildValue(child));
+            } else if (childName.equalsIgnoreCase("Title")) {
+                loop.getDescription().setTitle(parseInternationalString(child));
+            } else if (childName.equalsIgnoreCase("Rule")) {
+                rules.add(parseRule(child));
+            }
+        }
+
+        loop.rules().clear();
+        loop.rules().addAll(rules);
+
+        return loop;
     }
 
     /**

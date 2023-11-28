@@ -17,6 +17,7 @@
 package org.geotools.styling;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
@@ -35,6 +36,7 @@ import org.geotools.api.style.TextSymbolizer;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.factory.GeoTools;
 
 /**
@@ -226,7 +228,18 @@ public class TextSymbolizerImpl extends AbstractSymbolizer implements TextSymbol
     @Override
     public Object clone() {
         try {
-            return super.clone();
+            Object clone = super.clone();
+            if (description != null)
+                ((AbstractSymbolizer) clone).description =
+                        (Description) ((DescriptionImpl) description).clone();
+            if (geometry != null)
+                ((AbstractSymbolizer) clone).geometry =
+                        (Expression) ((ExpressionAbstract) geometry).clone();
+            if (unitOfMeasure != null) ((AbstractSymbolizer) clone).unitOfMeasure = unitOfMeasure;
+            if (options != null)
+                ((AbstractSymbolizer) clone).options = new LinkedHashMap<>(options);
+
+            return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError(e); // this should never happen.
         }
@@ -381,5 +394,37 @@ public class TextSymbolizerImpl extends AbstractSymbolizer implements TextSymbol
             if (other.priority != null) return false;
         } else if (!priority.equals(other.priority)) return false;
         return true;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        super.propagateTabIndex(index);
+        if (fill != null) {
+            fill.propagateTabIndex(index);
+        }
+        if (placement != null) {
+            placement.propagateTabIndex(index);
+        }
+        if (halo != null) {
+            halo.propagateTabIndex(index);
+        }
+        if (otherText != null) {
+            otherText.propagateTabIndex(index);
+        }
+        if (graphic != null && graphic instanceof GraphicImpl) {
+            ((GraphicImpl) graphic).propagateTabIndex(index);
+        }
+        if (label != null && label instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) label).propagateTabIndex(index);
+        }
+        if (priority != null && priority instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) priority).propagateTabIndex(index);
+        }
+        if (abxtract != null && abxtract instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) abxtract).propagateTabIndex(index);
+        }
+        if (description != null && description instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) description).propagateTabIndex(index);
+        }
     }
 }

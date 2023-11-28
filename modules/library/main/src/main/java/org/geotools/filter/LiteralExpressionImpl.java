@@ -248,4 +248,14 @@ public class LiteralExpressionImpl extends DefaultExpression implements Literal 
     public Object accept(ExpressionVisitor visitor, Object extraData) {
         return visitor.visit(this, extraData);
     }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        // do nothing
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

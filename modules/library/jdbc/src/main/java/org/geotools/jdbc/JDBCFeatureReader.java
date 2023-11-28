@@ -24,14 +24,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -528,7 +521,10 @@ public class JDBCFeatureReader implements FeatureReader<SimpleFeatureType, Simpl
                             }
 
                         } else {
-                            throw new IllegalStateException("Could not find array index");
+                            //                            throw new IllegalStateException("Could not
+                            // find array index");
+                            System.out.println(
+                                    "Gitara siema, wyszedł index tutaj, mam coś zmieniać?");
                         }
                     }
                     valueIndex++;

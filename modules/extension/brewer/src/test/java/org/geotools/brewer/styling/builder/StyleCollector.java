@@ -2,29 +2,7 @@ package org.geotools.brewer.styling.builder;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.geotools.api.style.ChannelSelection;
-import org.geotools.api.style.ColorMap;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.Halo;
-import org.geotools.api.style.ImageOutline;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.Mark;
-import org.geotools.api.style.NamedLayer;
-import org.geotools.api.style.PointPlacement;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SelectedChannelType;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.StyleVisitor;
-import org.geotools.api.style.StyledLayer;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
-import org.geotools.api.style.UserLayer;
+import org.geotools.api.style.*;
 import org.geotools.styling.AbstractStyleVisitor;
 
 public class StyleCollector extends AbstractStyleVisitor implements StyleVisitor {
@@ -32,6 +10,8 @@ public class StyleCollector extends AbstractStyleVisitor implements StyleVisitor
     List<FeatureTypeStyle> featureTypeStyles = new ArrayList<>();
 
     List<Rule> rules = new ArrayList<>();
+    List<Rule> loopRules = new ArrayList<>();
+    List<Loop> loops = new ArrayList<>();
 
     List<Symbolizer> symbolizers = new ArrayList<>();
 
@@ -70,10 +50,19 @@ public class StyleCollector extends AbstractStyleVisitor implements StyleVisitor
     }
 
     @Override
+    public void visit(Loop loop) {
+        loopRules.addAll(loop.rules());
+    }
+
+    @Override
     public void visit(FeatureTypeStyle fts) {
         for (Rule rule : fts.rules()) {
             rules.add(rule);
             rule.accept(this);
+        }
+        for (Loop loop : fts.loops()) {
+            loops.add(loop);
+            loop.accept(this);
         }
     }
 

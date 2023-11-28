@@ -19,19 +19,13 @@ package org.geotools.mbstyle.layer;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.filter.expression.Literal;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.GraphicFill;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SemanticType;
+import org.geotools.api.style.*;
 import org.geotools.mbstyle.MBStyle;
 import org.geotools.mbstyle.parse.MBFilter;
 import org.geotools.mbstyle.parse.MBFormatException;
@@ -223,7 +217,7 @@ public class FillMBLayer extends MBLayer {
      *   <li>{@link FillTranslateAnchor#VIEWPORT}: The fill is translated relative to the viewport.
      * </ul>
      *
-     * Requires fill-translate.
+     * <p>Requires fill-translate.
      *
      * @return One of 'map','viewport', defaults to 'map'.
      */
@@ -342,7 +336,8 @@ public class FillMBLayer extends MBLayer {
                         null, // (unused)
                         Collections.emptySet(),
                         filter.semanticTypeIdentifiers(),
-                        Arrays.asList(rule)));
+                        Arrays.asList(rule),
+                        new ArrayList<>()));
     }
 
     /**

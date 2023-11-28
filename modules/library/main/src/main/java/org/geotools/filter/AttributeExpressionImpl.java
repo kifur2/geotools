@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.geotools.api.feature.simple.SimpleFeatureType;
 import org.geotools.api.feature.type.Name;
 import org.geotools.api.filter.expression.ExpressionVisitor;
@@ -202,8 +204,15 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
         Object value = false;
         boolean success = false;
         String attPathCopy = attPath;
+        int index = -1;
 
         if (!attPath.startsWith("gml:") && attPath.contains("[") && attPath.endsWith("]")) {
+            Pattern pattern = Pattern.compile("\\[(\\d+)\\]");
+            Matcher matcher = pattern.matcher(attPath);
+
+            if (matcher.find()) {
+                index = Integer.parseInt(matcher.group(1));
+            }
             attPath = attPath.substring(0, attPath.indexOf("["));
         }
 
@@ -240,7 +249,6 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
                     }
                 }
             }
-            attPath = attPathCopy;
 
             if (!success) {
                 if (lenient) return null;
@@ -248,7 +256,7 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
                     IllegalArgumentException exception =
                             new IllegalArgumentException(
                                     "Could not find working property accessor for attribute ("
-                                            + attPath
+                                            + attPathCopy
                                             + ") in object ("
                                             + obj
                                             + ")");
@@ -260,6 +268,11 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
             } else {
                 lastAccessor = accessor;
             }
+        }
+
+        attPath = attPathCopy;
+        if (value != null && value.getClass().isArray() && index != -1) {
+            value = ((Object[]) value)[index];
         }
 
         if (target == null) {
@@ -374,5 +387,21 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
      */
     public boolean isLenient() {
         return lenient;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        attPath = attPath.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        AttributeExpressionImpl clone = (AttributeExpressionImpl) super.clone();
+        clone.attPath = attPath;
+        clone.schema = schema;
+        clone.namespaceSupport = namespaceSupport;
+        clone.hints = hints;
+        clone.lastAccessor = lastAccessor;
+        return clone;
     }
 }

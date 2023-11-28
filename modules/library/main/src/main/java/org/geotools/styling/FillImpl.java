@@ -19,19 +19,17 @@ package org.geotools.styling;
 import java.awt.Color;
 import org.geotools.api.filter.FilterFactory;
 import org.geotools.api.filter.expression.Expression;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.StyleVisitor;
-import org.geotools.api.style.TraversingStyleVisitor;
+import org.geotools.api.style.*;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.ConstantExpression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Utilities;
 import org.geotools.util.factory.GeoTools;
 
 /**
- * @version $Id$
  * @author James Macgill, CCG
+ * @version $Id$
  */
 public class FillImpl implements Fill, Cloneable {
     public static final Fill DEFAULT =
@@ -64,6 +62,19 @@ public class FillImpl implements Fill, Cloneable {
                     cannotModifyConstant();
                     return null;
                 }
+
+                @Override
+                public void propagateTabIndex(int index) {
+                    if (COLOR != null && COLOR instanceof ExpressionAbstract) {
+                        ((ExpressionAbstract) COLOR).propagateTabIndex(index);
+                    }
+                    if (BGCOLOR != null && BGCOLOR instanceof ExpressionAbstract) {
+                        ((ExpressionAbstract) BGCOLOR).propagateTabIndex(index);
+                    }
+                    if (OPACITY != null && OPACITY instanceof ExpressionAbstract) {
+                        ((ExpressionAbstract) OPACITY).propagateTabIndex(index);
+                    }
+                }
             };
     public static final Fill NULL =
             new ConstantFill() {
@@ -91,6 +102,9 @@ public class FillImpl implements Fill, Cloneable {
                     cannotModifyConstant();
                     return null;
                 }
+
+                @Override
+                public void propagateTabIndex(int index) {}
             };
     private FilterFactory filterFactory;
     private Expression color = null;
@@ -324,6 +338,19 @@ public class FillImpl implements Fill, Cloneable {
         public Object accept(TraversingStyleVisitor visitor, Object data) {
             cannotModifyConstant();
             return null;
+        }
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        if (color != null && color instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) color).propagateTabIndex(index);
+        }
+        if (opacity != null && opacity instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) opacity).propagateTabIndex(index);
+        }
+        if (graphicFill != null && graphicFill instanceof GraphicImpl) {
+            ((GraphicImpl) graphicFill).propagateTabIndex(index);
         }
     }
 }

@@ -25,7 +25,7 @@ import org.geotools.util.Converters;
  *
  * @author Jody Garnett
  */
-public abstract class ExpressionAbstract implements Expression {
+public abstract class ExpressionAbstract implements Expression, Cloneable {
 
     /**
      * Subclass should override, default implementation returns null.
@@ -45,5 +45,14 @@ public abstract class ExpressionAbstract implements Expression {
     @Override
     public <T> T evaluate(Object object, Class<T> context) {
         return Converters.convert(evaluate(object), context);
+    }
+
+    public void propagateTabIndex(int index) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

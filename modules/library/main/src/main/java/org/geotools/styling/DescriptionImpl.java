@@ -16,6 +16,8 @@
  */
 package org.geotools.styling;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.InternationalString;
@@ -125,5 +127,27 @@ public class DescriptionImpl implements org.geotools.api.style.Description {
             copy.setAbstract(description.getAbstract());
             return copy;
         }
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        Pattern pattern = Pattern.compile("\\[[^\\]]*(index)[^\\]]*\\]");
+        Matcher matcher = null;
+        if (title != null) {
+            matcher = pattern.matcher(title);
+            matcher.replaceAll(index + "");
+        }
+        if (description != null) {
+            matcher = pattern.matcher(description);
+            matcher.replaceAll(index + "");
+        }
+    }
+
+    @Override
+    public Object clone() {
+        DescriptionImpl clone = new DescriptionImpl();
+        if (title != null) clone.title = title;
+        if (description != null) clone.description = description;
+        return clone;
     }
 }

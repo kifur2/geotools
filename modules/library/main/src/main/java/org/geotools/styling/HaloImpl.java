@@ -194,4 +194,13 @@ public class HaloImpl implements Halo, Cloneable {
 
         return result;
     }
+
+    public void propagateTabIndex(int index) {
+        if (fill != null) {
+            fill.propagateTabIndex(index);
+        }
+        if (radius != null && radius instanceof GraphicImpl) {
+            ((GraphicImpl) radius).propagateTabIndex(index);
+        }
+    }
 }

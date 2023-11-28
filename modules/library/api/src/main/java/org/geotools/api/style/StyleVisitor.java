@@ -72,6 +72,13 @@ public interface StyleVisitor {
     void visit(Rule rule);
 
     /**
+     * Called when accept is called on a loop
+     *
+     * @param loop the loop to visit
+     */
+    void visit(Loop loop);
+
+    /**
      * Called when accept is called on a fetauretypestyle
      *
      * @param fts the feature type styler to visit

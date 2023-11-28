@@ -30,6 +30,7 @@ import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.ConstantExpression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Utilities;
 import org.geotools.util.factory.GeoTools;
 
@@ -432,15 +433,37 @@ public class StrokeImpl implements Stroke, Cloneable {
             StrokeImpl clone = (StrokeImpl) super.clone();
 
             if (dashArray != null) {
-                clone.setDashArray((new ArrayList<>(dashArray)));
+                List<Expression> dashArrayClone = new ArrayList<>();
+                for (Expression expression : dashArray) {
+                    dashArrayClone.add((Expression) ((ExpressionAbstract) expression).clone());
+                }
+                clone.setDashArray(dashArrayClone);
             }
 
-            if (fillGraphic != null && fillGraphic instanceof Cloneable) {
+            if (fillGraphic != null) {
                 clone.fillGraphic = (GraphicImpl) ((Cloneable) fillGraphic).clone();
             }
 
-            if (strokeGraphic != null && fillGraphic instanceof Cloneable) {
+            if (strokeGraphic != null) {
                 clone.strokeGraphic = (GraphicImpl) ((Cloneable) strokeGraphic).clone();
+            }
+            if (color != null && color instanceof ExpressionAbstract) {
+                clone.color = (Expression) ((ExpressionAbstract) color).clone();
+            }
+            if (dashOffset != null && dashOffset instanceof ExpressionAbstract) {
+                clone.dashOffset = (Expression) ((ExpressionAbstract) dashOffset).clone();
+            }
+            if (lineCap != null && lineCap instanceof ExpressionAbstract) {
+                clone.lineCap = (Expression) ((ExpressionAbstract) lineCap).clone();
+            }
+            if (lineJoin != null && lineJoin instanceof ExpressionAbstract) {
+                clone.lineJoin = (Expression) ((ExpressionAbstract) lineJoin).clone();
+            }
+            if (opacity != null && opacity instanceof ExpressionAbstract) {
+                clone.opacity = (Expression) ((ExpressionAbstract) opacity).clone();
+            }
+            if (width != null && width instanceof ExpressionAbstract) {
+                clone.width = (Expression) ((ExpressionAbstract) width).clone();
             }
 
             return clone;
@@ -689,4 +712,38 @@ public class StrokeImpl implements Stroke, Cloneable {
                     return GraphicImpl.NULL;
                 }
             };
+
+    public void propagateTabIndex(int index) {
+        if (fillGraphic != null) {
+            fillGraphic.propagateTabIndex(index);
+        }
+        if (strokeGraphic != null) {
+            strokeGraphic.propagateTabIndex(index);
+        }
+        if (color != null && color instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) color).propagateTabIndex(index);
+        }
+        if (dashOffset != null && dashOffset instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) dashOffset).propagateTabIndex(index);
+        }
+        if (lineCap != null && lineCap instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) lineCap).propagateTabIndex(index);
+        }
+        if (lineJoin != null && lineJoin instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) lineJoin).propagateTabIndex(index);
+        }
+        if (opacity != null && opacity instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) opacity).propagateTabIndex(index);
+        }
+        if (width != null && width instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) width).propagateTabIndex(index);
+        }
+        if (dashArray != null) {
+            for (Expression expression : dashArray) {
+                if (expression instanceof ExpressionAbstract) {
+                    ((ExpressionAbstract) expression).propagateTabIndex(index);
+                }
+            }
+        }
+    }
 }

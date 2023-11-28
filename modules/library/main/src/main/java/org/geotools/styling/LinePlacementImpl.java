@@ -24,6 +24,7 @@ import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Utilities;
 import org.geotools.util.factory.GeoTools;
 
@@ -242,5 +243,18 @@ public class LinePlacementImpl implements LinePlacement, Cloneable {
     @Override
     public void setInitialGap(Expression initialGap) {
         this.initialGap = initialGap;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        if (perpendicularOffset != null && perpendicularOffset instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) perpendicularOffset).propagateTabIndex(index);
+        }
+        if (gap != null && gap instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) gap).propagateTabIndex(index);
+        }
+        if (initialGap != null && initialGap instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) initialGap).propagateTabIndex(index);
+        }
     }
 }

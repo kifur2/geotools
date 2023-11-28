@@ -90,16 +90,7 @@ import org.geotools.api.referencing.datum.PixelInCell;
 import org.geotools.api.referencing.operation.MathTransform;
 import org.geotools.api.referencing.operation.MathTransform2D;
 import org.geotools.api.referencing.operation.TransformException;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.StyleFactory;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
+import org.geotools.api.style.*;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.GridEnvelope2D;
 import org.geotools.coverage.grid.GridGeometry2D;
@@ -179,7 +170,7 @@ import org.locationtech.jts.simplify.TopologyPreservingSimplifier;
  *       instead of accumulating them up-front
  * </ul>
  *
- * Use this class if you need a stateless renderer that provides low memory footprint and decent
+ * <p>Use this class if you need a stateless renderer that provides low memory footprint and decent
  * rendering performance on the first call but don't need good optimal performance on subsequent
  * calls on the same data.
  *
@@ -476,8 +467,8 @@ public class StreamingRenderer implements GTRenderer {
     /**
      * adds a listener that responds to error events of feature rendered events.
      *
-     * @see RenderListener
      * @param listener the listener to add.
+     * @see RenderListener
      */
     @Override
     public void addRenderListener(RenderListener listener) {
@@ -490,8 +481,8 @@ public class StreamingRenderer implements GTRenderer {
     /**
      * Removes a render listener.
      *
-     * @see RenderListener
      * @param listener the listener to remove.
+     * @see RenderListener
      */
     @Override
     public void removeRenderListener(RenderListener listener) {
@@ -1665,6 +1656,12 @@ public class StreamingRenderer implements GTRenderer {
                     if (r.getFilter() == null) return; // uh-oh has no filter (want all rows)
                     filtersToDS.add(r.getFilter());
                 }
+                for (Loop l : style.loopList) {
+                    for (Rule r : l.rules()) {
+                        if (r.getFilter() == null) return; // uh-oh has no filter (want all rows)
+                        filtersToDS.add(r.getFilter());
+                    }
+                }
             }
 
             // if too many bail out
@@ -1793,13 +1790,14 @@ public class StreamingRenderer implements GTRenderer {
         final MetaBufferEstimator rbe = new MetaBufferEstimator();
 
         for (LiteFeatureTypeStyle lfts : styles) {
-            Rule[] rules = lfts.elseRules;
-            for (Rule value : rules) {
+            for (Rule value : lfts.elseRules) {
                 rbe.visit(value);
             }
-            rules = lfts.ruleList;
-            for (Rule rule : rules) {
+            for (Rule rule : lfts.ruleList) {
                 rbe.visit(rule);
+            }
+            for (Loop loop : lfts.loopList) {
+                rbe.visit(loop);
             }
         }
 
@@ -1833,6 +1831,9 @@ public class StreamingRenderer implements GTRenderer {
             }
             for (Rule rule : lfts.ruleList) {
                 sae.visit(rule);
+            }
+            for (Loop loop : lfts.loopList) {
+                sae.visit(loop);
             }
         }
 
@@ -1922,8 +1923,8 @@ public class StreamingRenderer implements GTRenderer {
      * @param attributes set of needed attributes
      * @param bboxes the rendering bounding boxes
      * @return an or'ed list of bbox filters, one for each geometric attribute in <code>attributes
-     *     </code>. If there are just one geometric attribute, just returns its corresponding <code>
-     *     GeometryFilter</code>.
+     * </code>. If there are just one geometric attribute, just returns its corresponding <code>
+     * GeometryFilter</code>.
      * @throws IllegalFilterException if something goes wrong creating the filter
      */
     private Filter createBBoxFilters(
@@ -2023,8 +2024,11 @@ public class StreamingRenderer implements GTRenderer {
                 List<Rule> ruleList = splittedRules.get(0);
                 List<Rule> elseRuleList = splittedRules.get(1);
 
+                List<Loop> loopList = fts.loops();
+
                 // if none, skip it
-                if ((ruleList.isEmpty()) && (elseRuleList.isEmpty())) continue;
+                if ((ruleList.isEmpty() && elseRuleList.isEmpty()) && loopList.isEmpty())
+                    continue; // what if loopList is empty?
 
                 // get the fts level composition, if any
                 Composite composite = styleFactory.getComposite(fts.getOptions());
@@ -2038,7 +2042,8 @@ public class StreamingRenderer implements GTRenderer {
                                     graphics,
                                     ruleList,
                                     elseRuleList,
-                                    fts.getTransformation());
+                                    fts.getTransformation(),
+                                    loopList);
                 } else {
                     lfts =
                             new LiteFeatureTypeStyle(
@@ -2046,7 +2051,8 @@ public class StreamingRenderer implements GTRenderer {
                                     new DelayedBackbufferGraphic(graphics, screenSize),
                                     ruleList,
                                     elseRuleList,
-                                    fts.getTransformation());
+                                    fts.getTransformation(),
+                                    loopList);
                 }
                 lfts.composite = composite;
                 if (org.geotools.api.style.FeatureTypeStyle.VALUE_EVALUATION_MODE_FIRST.equals(
@@ -2646,6 +2652,10 @@ public class StreamingRenderer implements GTRenderer {
 
     /** Utility method to apply the two rescale visitors without duplicating code */
     void rescaleFeatureTypeStyle(LiteFeatureTypeStyle fts, DuplicatingStyleVisitor visitor) {
+        for (int i = 0; i < fts.loopList.length; i++) {
+            visitor.visit(fts.loopList[i]);
+            fts.loopList[i] = (Loop) visitor.getCopy();
+        }
         for (int i = 0; i < fts.ruleList.length; i++) {
             visitor.visit(fts.ruleList[i]);
             fts.ruleList[i] = (Rule) visitor.getCopy();
@@ -2904,6 +2914,32 @@ public class StreamingRenderer implements GTRenderer {
             Graphics2D graphics = fts.graphics;
             // applicable rules
             int paintCommands = 0;
+            Loop[] loopList = fts.loopList;
+            if (loopList != null) {
+                for (Loop loop : loopList) {
+                    int max;
+                    try {
+                        max = Integer.parseInt(loop.getMaxIndex());
+                    } catch (Exception e) {
+                        max =
+                                Integer.parseInt(
+                                        rf.feature
+                                                .getProperty(loop.getMaxIndex())
+                                                .getValue()
+                                                .toString());
+                    }
+
+                    for (int i = 0; i < max; ++i) {
+                        for (Rule rule : loop.rules()) {
+                            Rule copy = (Rule) ((RuleImpl) rule).clone();
+                            copy.propagateTabIndex(i);
+                            List<Rule> combinedList = new ArrayList<>(Arrays.asList(ruleList));
+                            combinedList.add(copy);
+                            ruleList = combinedList.toArray(new Rule[0]);
+                        }
+                    }
+                }
+            }
             for (Rule value : ruleList) {
                 r = value;
                 filter = r.getFilter();

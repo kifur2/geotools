@@ -65,7 +65,7 @@ public class NestedAttributeExpression extends AttributeExpressionImpl {
         this.fullSteps = xpath;
     }
 
-    /** see {@link org.geotools.filter.AttributeExpressionImpl#evaluate(Object)} */
+    /** see {@link Expression#evaluate(Object)} */
     @Override
     public Object evaluate(Object object) {
         if (object == null) {

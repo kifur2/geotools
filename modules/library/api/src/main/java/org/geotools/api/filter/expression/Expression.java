@@ -24,6 +24,7 @@ import org.geotools.api.feature.Feature;
  * @since GeoAPI 2.0
  */
 public interface Expression {
+
     /**
      * Constant expression that always evaulates to {@code null}.
      *
@@ -41,7 +42,7 @@ public interface Expression {
     Object evaluate(Object object);
 
     /**
-     * Evaluates the given expressoin based on the content of the given object and the context type.
+     * Evaluates the given expression based on the content of the given object and the context type.
      *
      * <p>The {@code context} parameter is used to control the type of the result of the expression.
      * A particular expression may not be able to evaluate to an instance of {@code context}.

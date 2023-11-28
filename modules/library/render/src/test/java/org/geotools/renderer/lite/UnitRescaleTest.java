@@ -79,7 +79,12 @@ public class UnitRescaleTest {
             List<Rule> elseRuleList = new ArrayList<>();
             LiteFeatureTypeStyle s =
                     new LiteFeatureTypeStyle(
-                            null, null, ruleList, elseRuleList, fts.getTransformation());
+                            null,
+                            null,
+                            ruleList,
+                            elseRuleList,
+                            fts.getTransformation(),
+                            new ArrayList<>());
             lfts.add(s);
         }
 

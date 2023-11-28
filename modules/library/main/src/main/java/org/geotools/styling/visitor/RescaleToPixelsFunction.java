@@ -58,16 +58,16 @@ public class RescaleToPixelsFunction extends FunctionExpressionImpl {
 
         String value = getExpression(0).evaluate(feature, String.class);
 
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+
         Pattern pattern = Pattern.compile("\\[([^,]+)\\]");
         Matcher matcher = pattern.matcher(value);
 
         // if the value is an array of 1 element then we change it to the element
         if (matcher.find()) {
             value = matcher.group(1);
-        }
-
-        if (value == null || value.trim().isEmpty()) {
-            return null;
         }
 
         @SuppressWarnings("unchecked")

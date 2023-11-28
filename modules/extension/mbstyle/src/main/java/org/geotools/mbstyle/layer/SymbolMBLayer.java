@@ -2034,7 +2034,8 @@ public class SymbolMBLayer extends MBLayer {
                         Collections.emptySet(),
                         filter.semanticTypeIdentifiers(), // we only expect this to be applied to
                         // polygons
-                        rules));
+                        rules,
+                        new ArrayList<>()));
     }
 
     /**

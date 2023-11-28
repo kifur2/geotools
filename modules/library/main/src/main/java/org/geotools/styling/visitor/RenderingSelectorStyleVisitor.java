@@ -20,14 +20,7 @@ package org.geotools.styling.visitor;
 import static org.geotools.api.style.FeatureTypeStyle.RenderingSelectionOptions.NORMAL;
 
 import java.util.Map;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
+import org.geotools.api.style.*;
 
 /**
  * This abstract class applies the include VendorOptions to a Style eg. <VendorOption
@@ -45,6 +38,11 @@ public abstract class RenderingSelectorStyleVisitor extends DuplicatingStyleVisi
     @Override
     public void visit(Rule rule) {
         if (canRender(rule.getOptions())) super.visit(rule);
+    }
+
+    @Override
+    public void visit(Loop loop) {
+        if (canRender(loop.getOptions())) super.visit(loop);
     }
 
     @Override

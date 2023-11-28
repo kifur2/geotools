@@ -93,4 +93,6 @@ public interface Fill {
     void setGraphicFill(Graphic graphicFill);
 
     void accept(StyleVisitor visitor);
+
+    void propagateTabIndex(int index);
 }

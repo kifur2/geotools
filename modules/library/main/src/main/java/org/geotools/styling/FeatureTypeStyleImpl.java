@@ -27,12 +27,7 @@ import org.geotools.api.feature.type.Name;
 import org.geotools.api.filter.Id;
 import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.metadata.citation.OnLineResource;
-import org.geotools.api.style.Description;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SemanticType;
-import org.geotools.api.style.StyleVisitor;
-import org.geotools.api.style.TraversingStyleVisitor;
+import org.geotools.api.style.*;
 import org.geotools.api.util.Cloneable;
 import org.geotools.util.Utilities;
 
@@ -55,6 +50,7 @@ public class FeatureTypeStyleImpl implements FeatureTypeStyle, Cloneable {
     public static String VALUE_EVALUATION_MODE_FIRST = "first";
 
     private List<Rule> rules = new ArrayList<>();
+    private List<Loop> loops = new ArrayList<>();
     private Set<SemanticType> semantics = new LinkedHashSet<>();
     private Id featureInstances = null;
     private Set<Name> featureTypeNames = new LinkedHashSet<>();
@@ -92,6 +88,12 @@ public class FeatureTypeStyleImpl implements FeatureTypeStyle, Cloneable {
                 rules.add(RuleImpl.cast(rule)); // need to deep copy?
             }
         }
+        this.loops = new ArrayList<>();
+        if (fts.loops() != null) {
+            for (Loop loop : fts.loops()) {
+                loops.add(LoopImpl.cast(loop)); // need to deep copy?
+            }
+        }
         this.semantics = new LinkedHashSet<>(fts.semanticTypeIdentifiers());
         this.online = fts.getOnlineResource();
         this.transformation = fts.getTransformation();
@@ -100,6 +102,10 @@ public class FeatureTypeStyleImpl implements FeatureTypeStyle, Cloneable {
     @Override
     public List<Rule> rules() {
         return rules;
+    }
+
+    public List<Loop> loops() {
+        return loops;
     }
 
     @Override

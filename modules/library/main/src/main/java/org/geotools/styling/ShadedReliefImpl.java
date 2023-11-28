@@ -24,6 +24,7 @@ import org.geotools.api.style.ShadedRelief;
 import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Utilities;
 import org.geotools.util.factory.GeoTools;
 
@@ -141,6 +142,12 @@ public class ShadedReliefImpl implements ShadedRelief {
             copy.setReliefFactor(shadedRelief.getReliefFactor());
 
             return copy;
+        }
+    }
+
+    public void propagateTabIndex(int index) {
+        if (reliefFactor != null && reliefFactor instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) reliefFactor).propagateTabIndex(index);
         }
     }
 }

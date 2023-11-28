@@ -63,4 +63,6 @@ public interface Description {
      * @param visitor the style visitor
      */
     void accept(StyleVisitor visitor);
+
+    void propagateTabIndex(int index);
 }

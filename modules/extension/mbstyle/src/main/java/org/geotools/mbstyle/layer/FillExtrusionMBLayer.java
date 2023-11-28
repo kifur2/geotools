@@ -383,7 +383,8 @@ public class FillExtrusionMBLayer extends MBLayer {
                         null, // (unused)
                         Collections.emptySet(),
                         filter.semanticTypeIdentifiers(),
-                        Arrays.asList(shadowRule));
+                        Arrays.asList(shadowRule),
+                        new ArrayList<>());
 
         FeatureTypeStyle sides =
                 sf.featureTypeStyle(
@@ -394,7 +395,8 @@ public class FillExtrusionMBLayer extends MBLayer {
                         null, // (unused)
                         Collections.emptySet(),
                         filter.semanticTypeIdentifiers(),
-                        Arrays.asList(sidesRule));
+                        Arrays.asList(sidesRule),
+                        new ArrayList<>());
 
         FeatureTypeStyle roof =
                 sf.featureTypeStyle(
@@ -405,7 +407,8 @@ public class FillExtrusionMBLayer extends MBLayer {
                         null, // (unused)
                         Collections.emptySet(),
                         filter.semanticTypeIdentifiers(),
-                        Arrays.asList(roofRule));
+                        Arrays.asList(roofRule),
+                        new ArrayList<>());
 
         fillExtrusion.add(shadow);
         fillExtrusion.add(sides);

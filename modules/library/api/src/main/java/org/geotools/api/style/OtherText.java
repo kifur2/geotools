@@ -41,4 +41,6 @@ public interface OtherText {
     public Expression getText();
 
     public void setText(Expression otherText);
+
+    void propagateTabIndex(int index);
 }

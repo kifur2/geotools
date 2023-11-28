@@ -18,6 +18,7 @@ package org.geotools.styling;
 
 import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.style.OtherText;
+import org.geotools.filter.expression.ExpressionAbstract;
 
 public class OtherTextImpl implements OtherText {
 
@@ -43,5 +44,15 @@ public class OtherTextImpl implements OtherText {
     @Override
     public void setText(Expression text) {
         this.text = text;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        if (text != null && text instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) text).propagateTabIndex(index);
+        }
+        if (location != null) {
+            location = location.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+        }
     }
 }

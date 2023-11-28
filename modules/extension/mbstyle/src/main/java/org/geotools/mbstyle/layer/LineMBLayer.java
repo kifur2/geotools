@@ -25,15 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.filter.expression.Literal;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.GraphicFill;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SemanticType;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Symbolizer;
+import org.geotools.api.style.*;
 import org.geotools.filter.function.RecodeFunction;
 import org.geotools.mbstyle.MBStyle;
 import org.geotools.mbstyle.parse.MBFilter;
@@ -618,7 +610,8 @@ public class LineMBLayer extends MBLayer {
                         null,
                         Collections.emptySet(),
                         filter.semanticTypeIdentifiers(),
-                        rules));
+                        rules,
+                        new ArrayList<>()));
     }
 
     private List<Expression> scaleByWidth(List<Expression> dasharray, Expression lineWidth) {

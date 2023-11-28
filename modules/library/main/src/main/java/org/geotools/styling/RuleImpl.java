@@ -32,6 +32,8 @@ import org.geotools.api.style.Symbolizer;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.BinaryComparisonAbstract;
+import org.geotools.filter.IsBetweenImpl;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.util.Utilities;
 
@@ -241,8 +243,11 @@ public class RuleImpl implements Rule, Cloneable {
             }
             clone.hasElseFilter = hasElseFilter;
             clone.legend = legend;
+            clone.symbolizers = new ArrayList<>();
 
-            clone.symbolizers = new ArrayList<>(symbolizers);
+            for (Symbolizer symbolizer : symbolizers) {
+                clone.symbolizers.add((Symbolizer) ((AbstractSymbolizer) symbolizer).clone());
+            }
 
             clone.maxScaleDenominator = maxScaleDenominator;
             clone.minScaleDenominator = minScaleDenominator;
@@ -388,5 +393,36 @@ public class RuleImpl implements Rule, Cloneable {
             options = new LinkedHashMap<>();
         }
         return options;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        if (filter != null) {
+            if (filter instanceof IsBetweenImpl) {
+                ((IsBetweenImpl) filter).propagateTabIndex(index);
+            } else if (filter instanceof BinaryComparisonAbstract) {
+                ((BinaryComparisonAbstract) filter).propagateTabIndex(index);
+            }
+        }
+        if (description != null) {
+            description.propagateTabIndex(index);
+        }
+        if (name != null) {
+            name = name.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+        }
+        if (options != null) {
+            for (String key : options.keySet()) {
+                String value = options.get(key);
+                if (value != null) {
+                    options.put(
+                            key,
+                            value.replaceAll(
+                                    "\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]"));
+                }
+            }
+        }
+        for (Symbolizer symbolizer : symbolizers) {
+            symbolizer.propagateTabIndex(index);
+        }
     }
 }

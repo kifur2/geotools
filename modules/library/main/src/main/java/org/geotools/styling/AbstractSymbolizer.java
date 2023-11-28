@@ -25,6 +25,7 @@ import org.geotools.api.filter.expression.PropertyName;
 import org.geotools.api.style.Description;
 import org.geotools.api.style.Symbolizer;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.expression.ExpressionAbstract;
 
 public abstract class AbstractSymbolizer implements Symbolizer {
     protected String name;
@@ -174,5 +175,24 @@ public abstract class AbstractSymbolizer implements Symbolizer {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        if (description != null) description.propagateTabIndex(index);
+        if (geometry != null && geometry instanceof ExpressionAbstract)
+            ((ExpressionAbstract) geometry).propagateTabIndex(index);
+        if (name != null) {
+            name = name.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+        }
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e); // this should never happen.
+        }
     }
 }

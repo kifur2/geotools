@@ -32,39 +32,7 @@ import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.filter.expression.Function;
 import org.geotools.api.filter.expression.PropertyName;
 import org.geotools.api.metadata.citation.OnLineResource;
-import org.geotools.api.style.AnchorPoint;
-import org.geotools.api.style.ChannelSelection;
-import org.geotools.api.style.ColorReplacement;
-import org.geotools.api.style.ContrastEnhancement;
-import org.geotools.api.style.ContrastMethod;
-import org.geotools.api.style.Description;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.ExtensionSymbolizer;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.ExternalMark;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Font;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.GraphicFill;
-import org.geotools.api.style.GraphicLegend;
-import org.geotools.api.style.GraphicStroke;
-import org.geotools.api.style.GraphicalSymbol;
-import org.geotools.api.style.Halo;
-import org.geotools.api.style.LabelPlacement;
-import org.geotools.api.style.Mark;
-import org.geotools.api.style.OverlapBehaviorEnum;
-import org.geotools.api.style.PointPlacement;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SelectedChannelType;
-import org.geotools.api.style.SemanticType;
-import org.geotools.api.style.ShadedRelief;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
+import org.geotools.api.style.*;
 import org.geotools.api.util.InternationalString;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.util.factory.GeoTools;
@@ -183,7 +151,8 @@ public class StyleFactoryImpl2 {
             Id definedFor,
             Set<Name> featureTypeNames,
             Set<SemanticType> types,
-            List<Rule> rules) {
+            List<Rule> rules,
+            List<Loop> loops) {
         FeatureTypeStyleImpl featureTypeStyle = new FeatureTypeStyleImpl();
         featureTypeStyle.setName(name);
 
@@ -202,6 +171,13 @@ public class StyleFactoryImpl2 {
                 featureTypeStyle.rules().add((RuleImpl) rule);
             } else {
                 featureTypeStyle.rules().add(new RuleImpl(rule));
+            }
+        }
+        for (Loop loop : loops) {
+            if (loop instanceof LoopImpl) {
+                featureTypeStyle.loops().add(loop);
+            } else {
+                featureTypeStyle.loops().add(new LoopImpl(loop));
             }
         }
         return featureTypeStyle;
@@ -546,6 +522,25 @@ public class StyleFactoryImpl2 {
             rule.setElseFilter(true);
         }
         return rule;
+    }
+
+    public LoopImpl loop(
+            String name,
+            Description description,
+            GraphicLegend legend,
+            String maxIndex,
+            List<Rule> rules) {
+        LoopImpl loop = new LoopImpl();
+        loop.setName(name);
+        loop.setDescription(description);
+        loop.setLegend(legend);
+        loop.setMaxIndex(maxIndex);
+        if (rules != null) {
+            for (Rule rule : rules) {
+                loop.rules().add(rule);
+            }
+        }
+        return loop;
     }
 
     public SelectedChannelType selectedChannelType(

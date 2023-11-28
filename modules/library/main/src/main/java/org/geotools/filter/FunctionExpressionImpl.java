@@ -29,12 +29,13 @@ import org.geotools.api.filter.expression.ExpressionVisitor;
 import org.geotools.api.filter.expression.Literal;
 import org.geotools.feature.NameImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
+import org.geotools.filter.expression.ExpressionAbstract;
 
 /**
  * Abstract class for a function expression implementation
  *
  * <p>By default this implementation returns the provided {@link #fallback} value. To implement a
- * function please override the {@link #evaluate(Object)} method.
+ * function please override the {@link Expression#evaluate(Object)} method.
  *
  * @author James Macgill, PSU
  */
@@ -84,10 +85,12 @@ public abstract class FunctionExpressionImpl extends org.geotools.filter.Default
     protected FunctionExpressionImpl(Name name) {
         this(name, null);
     }
+
     /** Creates a new instance of FunctionExpression */
     protected FunctionExpressionImpl(String name, Literal fallback) {
         this(new NameImpl(name), fallback);
     }
+
     /** Creates a new instance of FunctionExpression */
     protected FunctionExpressionImpl(Name name, Literal fallback) {
         this.functionName = new FunctionNameImpl(name, (Class<?>) null);
@@ -123,6 +126,7 @@ public abstract class FunctionExpressionImpl extends org.geotools.filter.Default
     public void setFallbackValue(Literal fallback) {
         this.fallback = fallback;
     }
+
     /** Returns the function parameters. */
     @Override
     public List<org.geotools.api.filter.expression.Expression> getParameters() {
@@ -236,5 +240,24 @@ public abstract class FunctionExpressionImpl extends org.geotools.filter.Default
             if (other.params != null) return false;
         } else if (!params.equals(other.params)) return false;
         return true;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        name = name.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+        for (Expression param : params) {
+            if (param instanceof ExpressionAbstract)
+                ((ExpressionAbstract) param).propagateTabIndex(index);
+        }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        FunctionExpressionImpl clone = (FunctionExpressionImpl) super.clone();
+        clone.params = new ArrayList<>();
+        for (Expression param : params) {
+            clone.params.add((Expression) ((ExpressionAbstract) param).clone());
+        }
+        return clone;
     }
 }

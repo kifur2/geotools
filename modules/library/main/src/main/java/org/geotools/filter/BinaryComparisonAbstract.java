@@ -17,8 +17,8 @@
 package org.geotools.filter;
 
 import org.geotools.api.filter.MultiValuedFilter;
-import org.geotools.api.filter.MultiValuedFilter.MatchAction;
 import org.geotools.api.filter.expression.Expression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.ConverterFactory;
 import org.geotools.util.Converters;
 import org.geotools.util.factory.Hints;
@@ -149,6 +149,15 @@ public abstract class BinaryComparisonAbstract extends AbstractFilter implements
             return (Comparable) value;
         } else {
             return String.valueOf(value);
+        }
+    }
+
+    public void propagateTabIndex(int index) {
+        if (expression1 != null && expression1 instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) expression1).propagateTabIndex(index);
+        }
+        if (expression2 != null && expression2 instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) expression2).propagateTabIndex(index);
         }
     }
 }

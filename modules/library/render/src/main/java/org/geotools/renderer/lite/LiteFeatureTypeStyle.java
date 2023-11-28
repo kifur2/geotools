@@ -21,6 +21,7 @@ import java.awt.Graphics2D;
 import java.util.List;
 import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.filter.sort.SortBy;
+import org.geotools.api.style.Loop;
 import org.geotools.api.style.Rule;
 import org.geotools.data.util.ScreenMap;
 import org.geotools.map.Layer;
@@ -54,6 +55,7 @@ final class LiteFeatureTypeStyle {
     public Layer layer;
 
     public Rule[] ruleList;
+    public Loop[] loopList;
 
     public Rule[] elseRules;
 
@@ -95,10 +97,12 @@ final class LiteFeatureTypeStyle {
             Graphics2D graphics,
             List<Rule> ruleList,
             List<Rule> elseRuleList,
-            Expression transformation) {
+            Expression transformation,
+            List<Loop> loopList) {
         this.layer = layer;
         this.graphics = graphics;
         this.ruleList = ruleList.toArray(new Rule[ruleList.size()]);
+        this.loopList = loopList.toArray(new Loop[loopList.size()]);
         this.elseRules = elseRuleList.toArray(new Rule[elseRuleList.size()]);
         this.transformation = transformation;
     }

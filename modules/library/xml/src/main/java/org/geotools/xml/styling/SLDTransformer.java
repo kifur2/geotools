@@ -42,48 +42,7 @@ import org.geotools.api.filter.expression.Literal;
 import org.geotools.api.filter.expression.PropertyName;
 import org.geotools.api.referencing.ReferenceIdentifier;
 import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
-import org.geotools.api.style.AnchorPoint;
-import org.geotools.api.style.ChannelSelection;
-import org.geotools.api.style.ColorMap;
-import org.geotools.api.style.ColorMapEntry;
-import org.geotools.api.style.ContrastEnhancement;
-import org.geotools.api.style.ContrastMethod;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.Extent;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.FeatureTypeConstraint;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Font;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.GraphicalSymbol;
-import org.geotools.api.style.Halo;
-import org.geotools.api.style.ImageOutline;
-import org.geotools.api.style.LinePlacement;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.Mark;
-import org.geotools.api.style.NamedLayer;
-import org.geotools.api.style.NamedStyle;
-import org.geotools.api.style.OtherText;
-import org.geotools.api.style.OverlapBehavior;
-import org.geotools.api.style.PointPlacement;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.RemoteOWS;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SelectedChannelType;
-import org.geotools.api.style.SemanticType;
-import org.geotools.api.style.ShadedRelief;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.StyleVisitor;
-import org.geotools.api.style.StyledLayer;
-import org.geotools.api.style.StyledLayerDescriptor;
-import org.geotools.api.style.Symbol;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
-import org.geotools.api.style.UserLayer;
+import org.geotools.api.style.*;
 import org.geotools.api.util.InternationalString;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
@@ -882,6 +841,37 @@ public class SLDTransformer extends TransformerBase {
             }
 
             end("Rule");
+        }
+
+        @Override
+        public void visit(Loop loop) {
+            start("Loop");
+            if (loop.getName() != null) element("Name", loop.getName());
+            if (loop.getDescription() != null && loop.getDescription().getTitle() != null)
+                element("Title", loop.getDescription().getTitle());
+            if (loop.getDescription() != null && loop.getDescription().getAbstract() != null)
+                element("Abstract", loop.getDescription().getAbstract());
+
+            Graphic legend = (Graphic) loop.getLegend();
+            if (legend != null) {
+                start("LegendGraphic");
+                legend.accept(this);
+                end("LegendGraphic");
+            }
+
+            if (loop.getMaxIndex() != null) {
+                element("MaxIndex", loop.getMaxIndex() + "");
+            }
+
+            for (Rule rule : loop.rules()) {
+                rule.accept(this);
+            }
+
+            if (loop.getOptions() != null) {
+                encodeVendorOptions(loop.getOptions());
+            }
+
+            end("Loop");
         }
 
         @Override

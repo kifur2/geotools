@@ -28,6 +28,7 @@ import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.ConstantExpression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Utilities;
 import org.geotools.util.factory.GeoTools;
 
@@ -251,5 +252,14 @@ public class PointPlacementImpl implements PointPlacement, Cloneable {
             return copy;
         }
         return null;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        anchorPoint.propagateTabIndex(index);
+        displacement.propagateTabIndex(index);
+        if (rotation != null && rotation instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) rotation).propagateTabIndex(index);
+        }
     }
 }

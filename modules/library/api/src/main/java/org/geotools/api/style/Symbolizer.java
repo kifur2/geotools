@@ -28,11 +28,11 @@ import org.geotools.api.filter.expression.PropertyName;
  * no end caps). If a raster geometry is used, its coverage-area outline is used for the line,
  * rendered with no end caps.
  *
- * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
- *     Implementation Specification 1.1.0</A>
  * @author Open Geospatial Consortium
  * @author Johann Sorel (Geomatys)
  * @author Chris Dillard (SYS Technologies)
+ * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
+ *     Implementation Specification 1.1.0</A>
  * @since GeoAPI 2.2
  */
 public interface Symbolizer {
@@ -124,8 +124,8 @@ public interface Symbolizer {
      *
      * <p>
      *
-     * @since SymbologyEncoding 1.1
      * @param uom can be null, which indicates usage of the pixel unit.
+     * @since SymbologyEncoding 1.1
      */
     void setUnitOfMeasure(Unit<Length> uom);
 
@@ -178,4 +178,6 @@ public interface Symbolizer {
      * #hasOption(String)}
      */
     Map<String, String> getOptions();
+
+    void propagateTabIndex(int index);
 }

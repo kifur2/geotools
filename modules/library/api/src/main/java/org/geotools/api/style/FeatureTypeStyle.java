@@ -241,4 +241,6 @@ public interface FeatureTypeStyle {
             return option;
         }
     }
+
+    List<Loop> loops();
 }

@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.geotools.api.filter.expression.BinaryExpression;
+import org.geotools.api.filter.expression.Expression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Converters;
 
 /**
@@ -140,4 +142,22 @@ public abstract class MathExpressionImpl extends DefaultExpression implements Bi
     }
 
     protected abstract Object doArithmeticOperation(Double operand1, Double operand2);
+
+    @Override
+    public void propagateTabIndex(int index) {
+        if (leftValue != null && leftValue instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) leftValue).propagateTabIndex(index);
+        }
+        if (rightValue != null && rightValue instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) rightValue).propagateTabIndex(index);
+        }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        MathExpressionImpl clone = (MathExpressionImpl) super.clone();
+        clone.leftValue = (Expression) ((ExpressionAbstract) leftValue).clone();
+        clone.rightValue = (Expression) ((ExpressionAbstract) rightValue).clone();
+        return clone;
+    }
 }

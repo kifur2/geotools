@@ -17,11 +17,14 @@
 package org.geotools.styling;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.geotools.api.filter.expression.Expression;
+import org.geotools.api.style.Description;
 import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.Symbolizer;
 import org.geotools.api.style.TraversingStyleVisitor;
+import org.geotools.filter.expression.ExpressionAbstract;
 
 /**
  * ExtensioSymbolizer capturing a vendor specific extension.
@@ -109,5 +112,39 @@ public class VendorSymbolizerImpl extends AbstractSymbolizer
     @Override
     public void accept(StyleVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        if (parameters != null) {
+            for (Expression exp : parameters.values()) {
+                if (exp instanceof ExpressionAbstract) {
+                    ((ExpressionAbstract) exp).propagateTabIndex(index);
+                }
+            }
+        }
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            VendorSymbolizerImpl clone = (VendorSymbolizerImpl) super.clone();
+            clone.parameters = new HashMap<>();
+            for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
+                clone.parameters.put(
+                        entry.getKey(),
+                        (Expression) ((ExpressionAbstract) entry.getValue()).clone());
+            }
+
+            if (description != null)
+                clone.description = (Description) ((DescriptionImpl) description).clone();
+            if (geometry != null)
+                clone.geometry = (Expression) ((ExpressionAbstract) geometry).clone();
+            if (unitOfMeasure != null) clone.unitOfMeasure = unitOfMeasure;
+            if (options != null) clone.options = new LinkedHashMap<>(options);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e); // this should never happen.
+        }
     }
 }

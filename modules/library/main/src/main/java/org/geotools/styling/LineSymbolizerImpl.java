@@ -16,6 +16,7 @@
  */
 package org.geotools.styling;
 
+import java.util.LinkedHashMap;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 import org.geotools.api.filter.expression.Expression;
@@ -25,6 +26,7 @@ import org.geotools.api.style.Stroke;
 import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
+import org.geotools.filter.expression.ExpressionAbstract;
 
 /**
  * Provides a representation of a LineSymbolizer in an SLD Document. A LineSymbolizer defines how a
@@ -115,9 +117,15 @@ public class LineSymbolizerImpl extends AbstractSymbolizer implements LineSymbol
         try {
             clone = (LineSymbolizerImpl) super.clone();
 
-            if (stroke != null && stroke instanceof Cloneable) {
+            if (stroke != null) {
                 clone.stroke = (StrokeImpl) ((Cloneable) stroke).clone();
             }
+            if (description != null)
+                clone.description = (Description) ((DescriptionImpl) description).clone();
+            if (geometry != null)
+                clone.geometry = (Expression) ((ExpressionAbstract) geometry).clone();
+            if (unitOfMeasure != null) clone.unitOfMeasure = unitOfMeasure;
+            if (options != null) clone.options = new LinkedHashMap<>(options);
 
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e); // this should never happen.
@@ -182,5 +190,16 @@ public class LineSymbolizerImpl extends AbstractSymbolizer implements LineSymbol
             return copy;
         }
         return null; // not a line symbolizer
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        super.propagateTabIndex(index);
+        if (stroke != null) {
+            stroke.propagateTabIndex(index);
+        }
+        if (offset != null && offset instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) offset).propagateTabIndex(index);
+        }
     }
 }

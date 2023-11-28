@@ -18,59 +18,13 @@ package org.geotools.styling.visitor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.swing.Icon;
 import org.geotools.api.filter.Filter;
 import org.geotools.api.filter.FilterFactory;
 import org.geotools.api.filter.expression.Expression;
-import org.geotools.api.style.AnchorPoint;
-import org.geotools.api.style.ChannelSelection;
-import org.geotools.api.style.ColorMap;
-import org.geotools.api.style.ColorMapEntry;
-import org.geotools.api.style.ContrastEnhancement;
-import org.geotools.api.style.Description;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.Extent;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.ExternalMark;
-import org.geotools.api.style.FeatureTypeConstraint;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Font;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.GraphicLegend;
-import org.geotools.api.style.GraphicalSymbol;
-import org.geotools.api.style.Halo;
-import org.geotools.api.style.ImageOutline;
-import org.geotools.api.style.LabelPlacement;
-import org.geotools.api.style.LinePlacement;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.Mark;
-import org.geotools.api.style.NamedLayer;
-import org.geotools.api.style.OtherText;
-import org.geotools.api.style.OverlapBehavior;
-import org.geotools.api.style.PointPlacement;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SelectedChannelType;
-import org.geotools.api.style.ShadedRelief;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.StyleFactory;
-import org.geotools.api.style.StyleVisitor;
-import org.geotools.api.style.StyledLayer;
-import org.geotools.api.style.StyledLayerDescriptor;
-import org.geotools.api.style.Symbol;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
-import org.geotools.api.style.UserLayer;
+import org.geotools.api.style.*;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.styling.DescriptionImpl;
@@ -306,6 +260,42 @@ public class DuplicatingStyleVisitor implements StyleVisitor {
     }
 
     @Override
+    public void visit(Loop loop) {
+
+        List<Rule> rulesCopy = new ArrayList<>();
+        for (Rule rule : loop.rules()) {
+            this.visit(rule);
+            rulesCopy.add((Rule) this.getCopy());
+        }
+
+        //                loop.rules().stream()
+        //                        .map(
+        //                                r -> {
+        //                                    r.accept(this);
+        //                                    return !pages.isEmpty() ? (Rule) pages.pop() : null;
+        //                                })
+        //                        .filter(Objects::nonNull)
+        //                        .collect(Collectors.toList());
+
+        GraphicLegend legendCopy = (GraphicLegend) copy((Graphic) loop.getLegend());
+
+        Description descCopy = loop.getDescription();
+        descCopy = copy(descCopy);
+
+        Loop copy = sf.createLoop();
+        copy.rules().addAll(rulesCopy);
+        copy.setDescription(descCopy);
+        copy.setLegend(legendCopy);
+        copy.setName(loop.getName());
+        copy.setMaxIndex(loop.getMaxIndex());
+        copy.getOptions().putAll(loop.getOptions());
+        if (STRICT && !copy.equals(loop)) {
+            throw new IllegalStateException("Was unable to duplicate provided Loop:" + loop);
+        }
+        pages.push(copy);
+    }
+
+    @Override
     public void visit(FeatureTypeStyle fts) {
 
         FeatureTypeStyle copy = (FeatureTypeStyle) new FeatureTypeStyleImpl(fts);
@@ -320,6 +310,16 @@ public class DuplicatingStyleVisitor implements StyleVisitor {
                                 })
                         .filter(r -> r != null)
                         .collect(Collectors.toList());
+        List<Loop> loopsCopy =
+                fts.loops().stream()
+                        .filter(Objects::nonNull)
+                        .map(
+                                l -> {
+                                    l.accept(this);
+                                    return !pages.isEmpty() ? (Loop) pages.pop() : null;
+                                })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
 
         //
         //        copy = sf.createFeatureTypeStyle();
@@ -329,6 +329,8 @@ public class DuplicatingStyleVisitor implements StyleVisitor {
         //        copy.setFeatureTypeName(fts.getFeatureTypeName());
         copy.rules().clear();
         copy.rules().addAll(rulesCopy);
+        copy.loops().clear();
+        copy.loops().addAll(loopsCopy);
         //        copy.setSemanticTypeIdentifiers((String[])
         // fts.getSemanticTypeIdentifiers().clone());
 

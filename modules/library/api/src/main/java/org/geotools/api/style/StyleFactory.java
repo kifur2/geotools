@@ -11,10 +11,7 @@ package org.geotools.api.style;
 
 import java.awt.RenderingHints;
 import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.measure.Unit;
 import javax.swing.Icon;
 import org.geotools.api.feature.type.Name;
@@ -212,6 +209,8 @@ public interface StyleFactory {
 
     Rule createRule();
 
+    Loop createLoop();
+
     LineSymbolizer createLineSymbolizer(Stroke stroke, String geometryPropertyName);
 
     FeatureTypeStyle createFeatureTypeStyle();
@@ -379,7 +378,8 @@ public interface StyleFactory {
             Id definedFor,
             Set<Name> featureTypeNames,
             Set<SemanticType> types,
-            List<Rule> rules);
+            List<Rule> rules,
+            List<Loop> loops);
 
     /** Create fill. */
     Fill fill(GraphicFill fill, Expression color, Expression opacity);
@@ -557,6 +557,13 @@ public interface StyleFactory {
             double max,
             List<Symbolizer> symbolizers,
             Filter filter);
+
+    Loop loop(
+            String name,
+            Description description,
+            GraphicLegend legend,
+            String maxIndex,
+            List<Rule> rules);
 
     /** @return SelectedChannelType */
     SelectedChannelType selectedChannelType(

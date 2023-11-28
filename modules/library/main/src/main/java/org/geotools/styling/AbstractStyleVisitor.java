@@ -16,41 +16,7 @@
  */
 package org.geotools.styling;
 
-import org.geotools.api.style.AnchorPoint;
-import org.geotools.api.style.ChannelSelection;
-import org.geotools.api.style.ColorMap;
-import org.geotools.api.style.ColorMapEntry;
-import org.geotools.api.style.ContrastEnhancement;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.FeatureTypeConstraint;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.GraphicalSymbol;
-import org.geotools.api.style.Halo;
-import org.geotools.api.style.ImageOutline;
-import org.geotools.api.style.LinePlacement;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.Mark;
-import org.geotools.api.style.NamedLayer;
-import org.geotools.api.style.OverlapBehavior;
-import org.geotools.api.style.PointPlacement;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SelectedChannelType;
-import org.geotools.api.style.ShadedRelief;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.StyleVisitor;
-import org.geotools.api.style.StyledLayer;
-import org.geotools.api.style.StyledLayerDescriptor;
-import org.geotools.api.style.Symbol;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
-import org.geotools.api.style.UserLayer;
+import org.geotools.api.style.*;
 
 /**
  * A basic implementation of the StyleVisitor interface.
@@ -105,6 +71,13 @@ public class AbstractStyleVisitor implements StyleVisitor {
     public void visit(Rule rule) {
         for (Symbolizer sym : rule.symbolizers()) {
             sym.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(Loop loop) {
+        for (Rule r : loop.rules()) {
+            r.accept(this);
         }
     }
 

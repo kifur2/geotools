@@ -26,6 +26,7 @@ import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.ConstantExpression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Utilities;
 import org.geotools.util.factory.GeoTools;
 
@@ -267,6 +268,15 @@ public class DisplacementImpl implements Cloneable, org.geotools.api.style.Displ
         @Override
         public void accept(StyleVisitor visitor) {
             cannotModifyConstant();
+        }
+    }
+
+    public void propagateTabIndex(int index) {
+        if (displacementX != null && displacementX instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) displacementX).propagateTabIndex(index);
+        }
+        if (displacementY != null && displacementY instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) displacementY).propagateTabIndex(index);
         }
     }
 }

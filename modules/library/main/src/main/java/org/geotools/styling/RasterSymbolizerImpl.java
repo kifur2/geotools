@@ -18,6 +18,7 @@
  */
 package org.geotools.styling;
 
+import java.util.LinkedHashMap;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 import org.geotools.api.filter.FilterFactory;
@@ -33,6 +34,7 @@ import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.Symbolizer;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.factory.GeoTools;
 
 /**
@@ -445,6 +447,15 @@ public class RasterSymbolizerImpl extends AbstractSymbolizer
 
         try {
             clone = super.clone();
+            if (description != null)
+                ((AbstractSymbolizer) clone).description =
+                        (Description) ((DescriptionImpl) description).clone();
+            if (geometry != null)
+                ((AbstractSymbolizer) clone).geometry =
+                        (Expression) ((ExpressionAbstract) geometry).clone();
+            if (unitOfMeasure != null) ((AbstractSymbolizer) clone).unitOfMeasure = unitOfMeasure;
+            if (options != null)
+                ((AbstractSymbolizer) clone).options = new LinkedHashMap<>(options);
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e); // this should never happen.
         }
@@ -477,5 +488,22 @@ public class RasterSymbolizerImpl extends AbstractSymbolizer
             return copy;
         }
         return null; // must not be a raster symbolizer
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        super.propagateTabIndex(index);
+        if (symbolizer != null) {
+            symbolizer.propagateTabIndex(index);
+        }
+        if (shadedRelief != null) {
+            shadedRelief.propagateTabIndex(index);
+        }
+        if (contrastEnhancement != null) {
+            contrastEnhancement.propagateTabIndex(index);
+        }
+        if (opacity != null && opacity instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) opacity).propagateTabIndex(index);
+        }
     }
 }

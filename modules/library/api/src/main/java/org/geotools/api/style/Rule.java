@@ -21,11 +21,11 @@ import org.geotools.api.metadata.citation.OnLineResource;
  * in the FeatureStyle, first checking its Filter (or ElseFilter). If the Filter passes, then every
  * Symbolizer for that rule is applied to the given feature.
  *
- * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
- *     Implementation Specification 1.1.0</A>
  * @author Open Geospatial Consortium
  * @author Johann Sorel (Geomatys)
  * @author Chris Dillard (SYS Technologies)
+ * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
+ *     Implementation Specification 1.1.0</A>
  * @since GeoAPI 2.2
  */
 public interface Rule {
@@ -186,4 +186,6 @@ public interface Rule {
 
     /** Used to traverse the style data structure. */
     void accept(StyleVisitor visitor);
+
+    void propagateTabIndex(int index);
 }

@@ -26,6 +26,7 @@ import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.ConstantExpression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Utilities;
 import org.geotools.util.factory.GeoTools;
 
@@ -231,5 +232,14 @@ public class AnchorPointImpl implements org.geotools.api.style.AnchorPoint, Clon
         }
 
         return result;
+    }
+
+    public void propagateTabIndex(int index) {
+        if (anchorPointX != null && anchorPointX instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) anchorPointX).propagateTabIndex(index);
+        }
+        if (anchorPointY != null && anchorPointY instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) anchorPointY).propagateTabIndex(index);
+        }
     }
 }

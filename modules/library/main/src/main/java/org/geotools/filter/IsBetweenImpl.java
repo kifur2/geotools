@@ -21,6 +21,7 @@ import java.util.Collections;
 import org.geotools.api.filter.FilterVisitor;
 import org.geotools.api.filter.PropertyIsBetween;
 import org.geotools.api.filter.expression.Expression;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.Converters;
 
 /**
@@ -217,5 +218,13 @@ public class IsBetweenImpl extends CompareFilterImpl implements PropertyIsBetwee
         } else if (!expression.equals(other.expression)) return false;
         if (matchAction != other.matchAction) return false;
         return true;
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        super.propagateTabIndex(index);
+        if (expression != null && expression instanceof ExpressionAbstract) {
+            ((ExpressionAbstract) expression).propagateTabIndex(index);
+        }
     }
 }

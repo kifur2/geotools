@@ -18,11 +18,7 @@
  */
 package org.geotools.styling;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.measure.Unit;
 import javax.swing.Icon;
 import org.geotools.api.feature.type.Name;
@@ -31,54 +27,7 @@ import org.geotools.api.filter.FilterFactory;
 import org.geotools.api.filter.Id;
 import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.metadata.citation.OnLineResource;
-import org.geotools.api.style.AnchorPoint;
-import org.geotools.api.style.ChannelSelection;
-import org.geotools.api.style.ColorMap;
-import org.geotools.api.style.ColorMapEntry;
-import org.geotools.api.style.ColorReplacement;
-import org.geotools.api.style.ContrastEnhancement;
-import org.geotools.api.style.ContrastMethod;
-import org.geotools.api.style.Description;
-import org.geotools.api.style.Displacement;
-import org.geotools.api.style.ExtensionSymbolizer;
-import org.geotools.api.style.Extent;
-import org.geotools.api.style.ExternalGraphic;
-import org.geotools.api.style.FeatureTypeConstraint;
-import org.geotools.api.style.FeatureTypeStyle;
-import org.geotools.api.style.Fill;
-import org.geotools.api.style.Font;
-import org.geotools.api.style.Graphic;
-import org.geotools.api.style.GraphicFill;
-import org.geotools.api.style.GraphicLegend;
-import org.geotools.api.style.GraphicStroke;
-import org.geotools.api.style.GraphicalSymbol;
-import org.geotools.api.style.Halo;
-import org.geotools.api.style.ImageOutline;
-import org.geotools.api.style.LabelPlacement;
-import org.geotools.api.style.LayerFeatureConstraints;
-import org.geotools.api.style.LinePlacement;
-import org.geotools.api.style.LineSymbolizer;
-import org.geotools.api.style.Mark;
-import org.geotools.api.style.NamedLayer;
-import org.geotools.api.style.NamedStyle;
-import org.geotools.api.style.OverlapBehaviorEnum;
-import org.geotools.api.style.PointPlacement;
-import org.geotools.api.style.PointSymbolizer;
-import org.geotools.api.style.PolygonSymbolizer;
-import org.geotools.api.style.RasterSymbolizer;
-import org.geotools.api.style.RemoteOWS;
-import org.geotools.api.style.Rule;
-import org.geotools.api.style.SelectedChannelType;
-import org.geotools.api.style.SemanticType;
-import org.geotools.api.style.ShadedRelief;
-import org.geotools.api.style.Stroke;
-import org.geotools.api.style.Style;
-import org.geotools.api.style.StyleFactory;
-import org.geotools.api.style.StyledLayerDescriptor;
-import org.geotools.api.style.Symbol;
-import org.geotools.api.style.Symbolizer;
-import org.geotools.api.style.TextSymbolizer;
-import org.geotools.api.style.UserLayer;
+import org.geotools.api.style.*;
 import org.geotools.api.util.InternationalString;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.util.factory.GeoTools;
@@ -261,6 +210,11 @@ public class StyleFactoryImpl extends AbstractStyleFactory implements StyleFacto
         return (Rule) new RuleImpl();
     }
 
+    @Override
+    public Loop createLoop() {
+        return new LoopImpl();
+    }
+
     public Rule createRule(
             Symbolizer[] symbolizers,
             Description desc,
@@ -276,6 +230,12 @@ public class StyleFactoryImpl extends AbstractStyleFactory implements StyleFacto
                         symbolizers, desc, legend, name, filter, isElseFilter, maxScale, minScale);
 
         return r;
+    }
+
+    public Loop createLoop(
+            Rule[] rules, Description desc, Graphic legend, String name, String maxIndex) {
+
+        return new LoopImpl(rules, desc, legend, name, maxIndex);
     }
 
     @Override
@@ -998,9 +958,10 @@ public class StyleFactoryImpl extends AbstractStyleFactory implements StyleFacto
             Id definedFor,
             Set<Name> featureTypeNames,
             Set<SemanticType> types,
-            List<org.geotools.api.style.Rule> rules) {
+            List<org.geotools.api.style.Rule> rules,
+            List<Loop> loops) {
         return delegate.featureTypeStyle(
-                name, description, definedFor, featureTypeNames, types, rules);
+                name, description, definedFor, featureTypeNames, types, rules, loops);
     }
 
     @Override
@@ -1185,6 +1146,16 @@ public class StyleFactoryImpl extends AbstractStyleFactory implements StyleFacto
             List<org.geotools.api.style.Symbolizer> symbolizers,
             Filter filter) {
         return delegate.rule(name, description, legend, min, max, symbolizers, filter);
+    }
+
+    @Override
+    public Loop loop(
+            String name,
+            Description description,
+            org.geotools.api.style.GraphicLegend legend,
+            String maxIndex,
+            List<Rule> rules) {
+        return delegate.loop(name, description, legend, maxIndex, rules);
     }
 
     @Override

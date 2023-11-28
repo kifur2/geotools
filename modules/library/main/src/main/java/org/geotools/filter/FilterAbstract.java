@@ -19,6 +19,8 @@ package org.geotools.filter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.geotools.api.feature.Property;
 import org.geotools.api.feature.simple.SimpleFeature;
 import org.geotools.feature.NameImpl;
@@ -78,7 +80,22 @@ public abstract class FilterAbstract implements org.geotools.api.filter.Filter {
     @SuppressWarnings("unchecked")
     protected Object eval(org.geotools.api.filter.expression.Expression expression, Object object) {
         if (expression == null) return null;
+
+        int index = -1;
+        if (!expression.toString().startsWith("gml:")
+                && expression.toString().contains("[")
+                && expression.toString().endsWith("]")) {
+
+            Pattern pattern = Pattern.compile("\\[(\\d+)\\]");
+            Matcher matcher = pattern.matcher(expression.toString());
+
+            if (matcher.find()) index = Integer.parseInt(matcher.group(1));
+        }
+
         Object value = expression.evaluate(object);
+        if (index != -1 && value.getClass().isArray()) {
+            value = ((Object[]) value)[index];
+        }
 
         if (value instanceof Collection) {
             // unpack all elements
@@ -91,6 +108,7 @@ public abstract class FilterAbstract implements org.geotools.api.filter.Filter {
 
         return unpack(value);
     }
+
     /**
      * Helper method for subclasses to reduce null checks
      *

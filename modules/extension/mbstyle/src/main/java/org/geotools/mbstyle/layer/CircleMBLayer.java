@@ -388,7 +388,8 @@ public class CircleMBLayer extends MBLayer {
                         null,
                         Collections.emptySet(),
                         filter.semanticTypeIdentifiers(),
-                        rules));
+                        rules,
+                        new ArrayList<>()));
     }
 
     /**

@@ -23,10 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.geotools.api.feature.simple.SimpleFeature;
 import org.geotools.api.feature.simple.SimpleFeatureType;
-import org.geotools.api.filter.expression.Divide;
-import org.geotools.api.filter.expression.Function;
-import org.geotools.api.filter.expression.Literal;
-import org.geotools.api.filter.expression.PropertyName;
+import org.geotools.api.filter.expression.*;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.DefaultFeatureCollection;

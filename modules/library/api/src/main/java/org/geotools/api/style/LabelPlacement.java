@@ -13,10 +13,10 @@ package org.geotools.api.style;
  * The LabelPlacement element is used to position a label relative to a point, line string or
  * polygon.
  *
- * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
- *     Implementation Specification 1.1.0</A>
  * @author Open Geospatial Consortium
  * @author Johann Sorel (Geomatys)
+ * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
+ *     Implementation Specification 1.1.0</A>
  * @since GeoAPI 2.2
  */
 public interface LabelPlacement {
@@ -31,4 +31,6 @@ public interface LabelPlacement {
     Object accept(TraversingStyleVisitor visitor, Object extraData);
 
     void accept(StyleVisitor visitor);
+
+    void propagateTabIndex(int index);
 }

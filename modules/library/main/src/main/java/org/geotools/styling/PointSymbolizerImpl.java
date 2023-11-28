@@ -16,14 +16,17 @@
  */
 package org.geotools.styling;
 
+import java.util.LinkedHashMap;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
+import org.geotools.api.filter.expression.Expression;
 import org.geotools.api.style.Description;
 import org.geotools.api.style.Graphic;
 import org.geotools.api.style.PointSymbolizer;
 import org.geotools.api.style.StyleVisitor;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.SimpleInternationalString;
 
 /**
@@ -106,6 +109,12 @@ public class PointSymbolizerImpl extends AbstractSymbolizer implements PointSymb
         try {
             clone = (PointSymbolizerImpl) super.clone();
             if (graphic != null) clone.graphic = (GraphicImpl) ((Cloneable) graphic).clone();
+            if (description != null)
+                clone.description = (Description) ((DescriptionImpl) description).clone();
+            if (geometry != null)
+                clone.geometry = (Expression) ((ExpressionAbstract) geometry).clone();
+            if (unitOfMeasure != null) clone.unitOfMeasure = unitOfMeasure;
+            if (options != null) clone.options = new LinkedHashMap<>(options);
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e); // this should never happen.
         }
@@ -150,5 +159,13 @@ public class PointSymbolizerImpl extends AbstractSymbolizer implements PointSymb
             return copy;
         }
         return null; // not a PointSymbolizer
+    }
+
+    @Override
+    public void propagateTabIndex(int index) {
+        super.propagateTabIndex(index);
+        if (graphic != null) {
+            graphic.propagateTabIndex(index);
+        }
     }
 }

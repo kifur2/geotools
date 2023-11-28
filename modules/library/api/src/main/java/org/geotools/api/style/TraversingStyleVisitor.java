@@ -58,6 +58,13 @@ public interface TraversingStyleVisitor {
     Object visit(Rule rule, Object data);
 
     /**
+     * Called when accept is called on a loop
+     *
+     * @param loop the loop to visit
+     */
+    Object visit(Loop loop, Object data);
+
+    /**
      * Called when accept is called on a pointsymbolizer
      *
      * @param pointSymbolizer the point symbolizer to visit

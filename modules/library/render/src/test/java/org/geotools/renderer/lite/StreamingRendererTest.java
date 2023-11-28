@@ -868,7 +868,12 @@ public class StreamingRendererTest {
                 new DelayedBackbufferGraphic(finalGraphics, new Rectangle(100, 100));
         LiteFeatureTypeStyle style1 =
                 new LiteFeatureTypeStyle(
-                        layer, graphics, new ArrayList<>(), new ArrayList<>(), null);
+                        layer,
+                        graphics,
+                        new ArrayList<>(),
+                        new ArrayList<>(),
+                        null,
+                        new ArrayList<>());
         style1.composite = AlphaComposite.DstIn;
         lfts.add(style1);
 
