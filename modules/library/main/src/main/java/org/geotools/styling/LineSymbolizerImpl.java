@@ -193,13 +193,13 @@ public class LineSymbolizerImpl extends AbstractSymbolizer implements LineSymbol
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        super.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        super.propagateTabIndex(indexName, index);
         if (stroke != null) {
-            stroke.propagateTabIndex(index);
+            stroke.propagateTabIndex(indexName, index);
         }
         if (offset != null && offset instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) offset).propagateTabIndex(index);
+            ((ExpressionAbstract) offset).propagateTabIndex(indexName, index);
         }
     }
 }

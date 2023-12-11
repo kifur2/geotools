@@ -246,15 +246,15 @@ public class LinePlacementImpl implements LinePlacement, Cloneable {
     }
 
     @Override
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (perpendicularOffset != null && perpendicularOffset instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) perpendicularOffset).propagateTabIndex(index);
+            ((ExpressionAbstract) perpendicularOffset).propagateTabIndex(indexName, index);
         }
         if (gap != null && gap instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) gap).propagateTabIndex(index);
+            ((ExpressionAbstract) gap).propagateTabIndex(indexName, index);
         }
         if (initialGap != null && initialGap instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) initialGap).propagateTabIndex(index);
+            ((ExpressionAbstract) initialGap).propagateTabIndex(indexName, index);
         }
     }
 }

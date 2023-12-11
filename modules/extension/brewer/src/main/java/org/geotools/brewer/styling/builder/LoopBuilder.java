@@ -11,6 +11,8 @@ public class LoopBuilder extends AbstractStyleBuilder<Loop> {
     Builder<? extends Rule> ruleBuilder;
 
     String maxIndex;
+    String minIndex;
+    String indexName;
 
     private GraphicLegendBuilder legend = new GraphicLegendBuilder(this).unset();
 
@@ -26,6 +28,18 @@ public class LoopBuilder extends AbstractStyleBuilder<Loop> {
     public LoopBuilder maxIndex(String maxIndex) {
         unset = false;
         this.maxIndex = maxIndex;
+        return this;
+    }
+
+    public LoopBuilder minIndex(String minIndex) {
+        unset = false;
+        this.minIndex = minIndex;
+        return this;
+    }
+
+    public LoopBuilder indexName(String indexName) {
+        unset = false;
+        this.indexName = indexName;
         return this;
     }
 
@@ -49,6 +63,8 @@ public class LoopBuilder extends AbstractStyleBuilder<Loop> {
         Loop loop = sf.createLoop();
         loop.rules().addAll(rules);
         loop.setMaxIndex(maxIndex);
+        loop.setMinIndex(minIndex);
+        loop.setIndexName(indexName);
         GraphicLegend gl = legend.build();
         if (gl != null) {
             loop.setLegend(gl);
@@ -67,6 +83,8 @@ public class LoopBuilder extends AbstractStyleBuilder<Loop> {
     @Override
     public LoopBuilder reset() {
         maxIndex = "";
+        minIndex = "";
+        indexName = "";
         rules.clear();
         legend.unset();
         unset = false;
@@ -79,6 +97,8 @@ public class LoopBuilder extends AbstractStyleBuilder<Loop> {
             return unset();
         }
         maxIndex = loop.getMaxIndex();
+        minIndex = loop.getMinIndex();
+        indexName = loop.getIndexName();
         rules.clear();
         rules.addAll(loop.rules()); // TODO: unpack into builders in order to "copy"
         ruleBuilder = null;

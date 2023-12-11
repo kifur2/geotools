@@ -130,8 +130,8 @@ public class DescriptionImpl implements org.geotools.api.style.Description {
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        Pattern pattern = Pattern.compile("\\[[^\\]]*(index)[^\\]]*\\]");
+    public void propagateTabIndex(String indexName, int index) {
+        Pattern pattern = Pattern.compile("\\[[^\\]]*(" + indexName + ")[^\\]]*\\]");
         Matcher matcher = null;
         if (title != null) {
             matcher = pattern.matcher(title);

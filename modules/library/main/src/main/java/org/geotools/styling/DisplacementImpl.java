@@ -271,12 +271,12 @@ public class DisplacementImpl implements Cloneable, org.geotools.api.style.Displ
         }
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (displacementX != null && displacementX instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) displacementX).propagateTabIndex(index);
+            ((ExpressionAbstract) displacementX).propagateTabIndex(indexName, index);
         }
         if (displacementY != null && displacementY instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) displacementY).propagateTabIndex(index);
+            ((ExpressionAbstract) displacementY).propagateTabIndex(indexName, index);
         }
     }
 }

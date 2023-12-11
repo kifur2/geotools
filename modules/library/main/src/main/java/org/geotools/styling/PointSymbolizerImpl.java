@@ -162,10 +162,10 @@ public class PointSymbolizerImpl extends AbstractSymbolizer implements PointSymb
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        super.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        super.propagateTabIndex(indexName, index);
         if (graphic != null) {
-            graphic.propagateTabIndex(index);
+            graphic.propagateTabIndex(indexName, index);
         }
     }
 }

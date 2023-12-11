@@ -288,6 +288,8 @@ public class DuplicatingStyleVisitor implements StyleVisitor {
         copy.setLegend(legendCopy);
         copy.setName(loop.getName());
         copy.setMaxIndex(loop.getMaxIndex());
+        copy.setMinIndex(loop.getMinIndex());
+        copy.setIndexName(loop.getIndexName());
         copy.getOptions().putAll(loop.getOptions());
         if (STRICT && !copy.equals(loop)) {
             throw new IllegalStateException("Was unable to duplicate provided Loop:" + loop);

@@ -487,27 +487,27 @@ public class GraphicImpl
         }
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (anchor != null) {
-            anchor.propagateTabIndex(index);
+            anchor.propagateTabIndex(indexName, index);
         }
         if (displacement != null) {
-            displacement.propagateTabIndex(index);
+            displacement.propagateTabIndex(indexName, index);
         }
         if (gap != null && gap instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) gap).propagateTabIndex(index);
+            ((ExpressionAbstract) gap).propagateTabIndex(indexName, index);
         }
         if (initialGap != null && initialGap instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) initialGap).propagateTabIndex(index);
+            ((ExpressionAbstract) initialGap).propagateTabIndex(indexName, index);
         }
         if (rotation != null && rotation instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) rotation).propagateTabIndex(index);
+            ((ExpressionAbstract) rotation).propagateTabIndex(indexName, index);
         }
         if (size != null && size instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) size).propagateTabIndex(index);
+            ((ExpressionAbstract) size).propagateTabIndex(indexName, index);
         }
         if (opacity != null && opacity instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) opacity).propagateTabIndex(index);
+            ((ExpressionAbstract) opacity).propagateTabIndex(indexName, index);
         }
     }
 }

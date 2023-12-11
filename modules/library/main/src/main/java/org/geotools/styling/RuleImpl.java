@@ -396,19 +396,21 @@ public class RuleImpl implements Rule, Cloneable {
     }
 
     @Override
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (filter != null) {
             if (filter instanceof IsBetweenImpl) {
-                ((IsBetweenImpl) filter).propagateTabIndex(index);
+                ((IsBetweenImpl) filter).propagateTabIndex(indexName, index);
             } else if (filter instanceof BinaryComparisonAbstract) {
-                ((BinaryComparisonAbstract) filter).propagateTabIndex(index);
+                ((BinaryComparisonAbstract) filter).propagateTabIndex(indexName, index);
             }
         }
         if (description != null) {
-            description.propagateTabIndex(index);
+            description.propagateTabIndex(indexName, index);
         }
         if (name != null) {
-            name = name.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+            name =
+                    name.replaceAll(
+                            "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
         }
         if (options != null) {
             for (String key : options.keySet()) {
@@ -417,12 +419,13 @@ public class RuleImpl implements Rule, Cloneable {
                     options.put(
                             key,
                             value.replaceAll(
-                                    "\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]"));
+                                    "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]",
+                                    "[" + index + "]"));
                 }
             }
         }
         for (Symbolizer symbolizer : symbolizers) {
-            symbolizer.propagateTabIndex(index);
+            symbolizer.propagateTabIndex(indexName, index);
         }
     }
 }

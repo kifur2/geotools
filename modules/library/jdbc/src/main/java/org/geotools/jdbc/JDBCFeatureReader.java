@@ -17,7 +17,6 @@
 package org.geotools.jdbc;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,8 +26,6 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.geotools.api.data.FeatureReader;
 import org.geotools.api.data.Query;
 import org.geotools.api.data.Transaction;
@@ -41,7 +38,6 @@ import org.geotools.api.feature.simple.SimpleFeatureType;
 import org.geotools.api.feature.type.AttributeDescriptor;
 import org.geotools.api.feature.type.GeometryDescriptor;
 import org.geotools.api.feature.type.Name;
-import org.geotools.api.filter.expression.PropertyName;
 import org.geotools.api.filter.identity.FeatureId;
 import org.geotools.api.geometry.BoundingBox;
 import org.geotools.api.referencing.operation.TransformException;
@@ -495,40 +491,6 @@ public class JDBCFeatureReader implements FeatureReader<SimpleFeatureType, Simpl
                 throw new IllegalStateException(
                         "Feature joining currently not supported along screenmap");
             }
-            int valueIndex = 0;
-            if (query != null && query.getProperties() != null)
-                for (PropertyName name : query.getProperties()) {
-                    String nameString = name.getPropertyName();
-                    if (!nameString.startsWith("gml:")
-                            && nameString.contains("[")
-                            && nameString.endsWith("]")) {
-                        Pattern pattern = Pattern.compile("\\[(\\d+)\\]");
-
-                        // Create a matcher with the input string
-                        Matcher matcher = pattern.matcher(nameString);
-
-                        // Check if the pattern is found
-                        if (matcher.find()) {
-                            // Extract the index (group 1 in the regex)
-                            int arrayIndex = Integer.parseInt(matcher.group(1));
-                            Object value = nextFeature.getAttribute(valueIndex);
-
-                            if (value != null && Array.getLength(value) > arrayIndex) {
-                                Object arrayElement = Array.get(value, arrayIndex);
-                                nextFeature.setAttribute(valueIndex, arrayElement);
-                            } else {
-                                nextFeature.setAttribute(valueIndex, null);
-                            }
-
-                        } else {
-                            //                            throw new IllegalStateException("Could not
-                            // find array index");
-                            System.out.println(
-                                    "Gitara siema, wyszedł index tutaj, mam coś zmieniać?");
-                        }
-                    }
-                    valueIndex++;
-                }
             return nextFeature;
         } finally {
             // reset the next flag. We do this in a finally block to make sure we

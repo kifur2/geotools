@@ -71,6 +71,14 @@ public interface Loop {
 
     void setMaxIndex(String maxIndex);
 
+    String getMinIndex();
+
+    void setMinIndex(String minIndex);
+
+    String getIndexName();
+
+    void setIndexName(String indexName);
+
     /**
      * calls the visit method of a StyleVisitor
      *

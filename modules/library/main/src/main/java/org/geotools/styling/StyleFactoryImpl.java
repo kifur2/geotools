@@ -233,9 +233,15 @@ public class StyleFactoryImpl extends AbstractStyleFactory implements StyleFacto
     }
 
     public Loop createLoop(
-            Rule[] rules, Description desc, Graphic legend, String name, String maxIndex) {
+            Rule[] rules,
+            Description desc,
+            Graphic legend,
+            String name,
+            String minIndex,
+            String maxIndex,
+            String indexName) {
 
-        return new LoopImpl(rules, desc, legend, name, maxIndex);
+        return new LoopImpl(rules, desc, legend, name, minIndex, maxIndex, indexName);
     }
 
     @Override
@@ -1152,10 +1158,12 @@ public class StyleFactoryImpl extends AbstractStyleFactory implements StyleFacto
     public Loop loop(
             String name,
             Description description,
-            org.geotools.api.style.GraphicLegend legend,
+            GraphicLegend legend,
+            String minIndex,
             String maxIndex,
+            String indexName,
             List<Rule> rules) {
-        return delegate.loop(name, description, legend, maxIndex, rules);
+        return delegate.loop(name, description, legend, minIndex, maxIndex, indexName, rules);
     }
 
     @Override

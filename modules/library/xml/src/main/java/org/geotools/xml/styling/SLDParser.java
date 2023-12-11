@@ -940,9 +940,17 @@ public class SLDParser {
         }
 
         Loop loop = new LoopImpl();
+
+        if (style.getAttributes().getNamedItem("index_min") != null)
+            loop.setMinIndex(style.getAttributes().getNamedItem("index_min").getNodeValue());
+        else loop.setMinIndex("0");
+
         if (style.getAttributes().getNamedItem("index_lower_than") != null)
             loop.setMaxIndex(style.getAttributes().getNamedItem("index_lower_than").getNodeValue());
         else throw new IllegalArgumentException("Loop must have index_lower_than attribute");
+        if (style.getAttributes().getNamedItem("index_name") != null)
+            loop.setIndexName(style.getAttributes().getNamedItem("index_name").getNodeValue());
+        else loop.setIndexName("index");
 
         ArrayList<Rule> rules = new ArrayList<>();
         NodeList children = style.getChildNodes();

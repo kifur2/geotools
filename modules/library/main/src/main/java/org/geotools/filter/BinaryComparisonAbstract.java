@@ -152,12 +152,12 @@ public abstract class BinaryComparisonAbstract extends AbstractFilter implements
         }
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (expression1 != null && expression1 instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) expression1).propagateTabIndex(index);
+            ((ExpressionAbstract) expression1).propagateTabIndex(indexName, index);
         }
         if (expression2 != null && expression2 instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) expression2).propagateTabIndex(index);
+            ((ExpressionAbstract) expression2).propagateTabIndex(indexName, index);
         }
     }
 }

@@ -713,35 +713,35 @@ public class StrokeImpl implements Stroke, Cloneable {
                 }
             };
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (fillGraphic != null) {
-            fillGraphic.propagateTabIndex(index);
+            fillGraphic.propagateTabIndex(indexName, index);
         }
         if (strokeGraphic != null) {
-            strokeGraphic.propagateTabIndex(index);
+            strokeGraphic.propagateTabIndex(indexName, index);
         }
         if (color != null && color instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) color).propagateTabIndex(index);
+            ((ExpressionAbstract) color).propagateTabIndex(indexName, index);
         }
         if (dashOffset != null && dashOffset instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) dashOffset).propagateTabIndex(index);
+            ((ExpressionAbstract) dashOffset).propagateTabIndex(indexName, index);
         }
         if (lineCap != null && lineCap instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) lineCap).propagateTabIndex(index);
+            ((ExpressionAbstract) lineCap).propagateTabIndex(indexName, index);
         }
         if (lineJoin != null && lineJoin instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) lineJoin).propagateTabIndex(index);
+            ((ExpressionAbstract) lineJoin).propagateTabIndex(indexName, index);
         }
         if (opacity != null && opacity instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) opacity).propagateTabIndex(index);
+            ((ExpressionAbstract) opacity).propagateTabIndex(indexName, index);
         }
         if (width != null && width instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) width).propagateTabIndex(index);
+            ((ExpressionAbstract) width).propagateTabIndex(indexName, index);
         }
         if (dashArray != null) {
             for (Expression expression : dashArray) {
                 if (expression instanceof ExpressionAbstract) {
-                    ((ExpressionAbstract) expression).propagateTabIndex(index);
+                    ((ExpressionAbstract) expression).propagateTabIndex(indexName, index);
                 }
             }
         }

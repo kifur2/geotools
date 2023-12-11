@@ -221,10 +221,10 @@ public class IsBetweenImpl extends CompareFilterImpl implements PropertyIsBetwee
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        super.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        super.propagateTabIndex(indexName, index);
         if (expression != null && expression instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) expression).propagateTabIndex(index);
+            ((ExpressionAbstract) expression).propagateTabIndex(indexName, index);
         }
     }
 }

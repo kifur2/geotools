@@ -94,5 +94,5 @@ public interface Fill {
 
     void accept(StyleVisitor visitor);
 
-    void propagateTabIndex(int index);
+    void propagateTabIndex(String indexName, int index);
 }

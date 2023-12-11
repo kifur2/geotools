@@ -179,5 +179,5 @@ public interface Symbolizer {
      */
     Map<String, String> getOptions();
 
-    void propagateTabIndex(int index);
+    void propagateTabIndex(String indexName, int index);
 }

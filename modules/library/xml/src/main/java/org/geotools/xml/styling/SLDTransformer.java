@@ -860,7 +860,13 @@ public class SLDTransformer extends TransformerBase {
             }
 
             if (loop.getMaxIndex() != null) {
-                element("MaxIndex", loop.getMaxIndex() + "");
+                element("MaxIndex", loop.getMaxIndex());
+            }
+            if (loop.getMinIndex() != null) {
+                element("MinIndex", loop.getMinIndex());
+            }
+            if (loop.getIndexName() != null) {
+                element("IndexName", loop.getIndexName());
             }
 
             for (Rule rule : loop.rules()) {

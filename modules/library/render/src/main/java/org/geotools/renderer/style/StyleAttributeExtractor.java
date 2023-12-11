@@ -93,6 +93,8 @@ public class StyleAttributeExtractor extends FilterAttributeExtractor implements
     public void visit(Loop loop) {
         AttributeExpressionImpl maxIndex = new AttributeExpressionImpl(loop.getMaxIndex());
         maxIndex.accept(this, null);
+        AttributeExpressionImpl minIndex = new AttributeExpressionImpl(loop.getMinIndex());
+        minIndex.accept(this, null);
         loop.rules().forEach(s -> s.accept(this));
     }
 

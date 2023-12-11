@@ -115,11 +115,11 @@ public class VendorSymbolizerImpl extends AbstractSymbolizer
     }
 
     @Override
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (parameters != null) {
             for (Expression exp : parameters.values()) {
                 if (exp instanceof ExpressionAbstract) {
-                    ((ExpressionAbstract) exp).propagateTabIndex(index);
+                    ((ExpressionAbstract) exp).propagateTabIndex(indexName, index);
                 }
             }
         }

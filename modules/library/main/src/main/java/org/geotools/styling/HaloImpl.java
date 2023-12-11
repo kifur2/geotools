@@ -195,12 +195,12 @@ public class HaloImpl implements Halo, Cloneable {
         return result;
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (fill != null) {
-            fill.propagateTabIndex(index);
+            fill.propagateTabIndex(indexName, index);
         }
         if (radius != null && radius instanceof GraphicImpl) {
-            ((GraphicImpl) radius).propagateTabIndex(index);
+            ((GraphicImpl) radius).propagateTabIndex(indexName, index);
         }
     }
 }

@@ -145,9 +145,9 @@ public class ShadedReliefImpl implements ShadedRelief {
         }
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (reliefFactor != null && reliefFactor instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) reliefFactor).propagateTabIndex(index);
+            ((ExpressionAbstract) reliefFactor).propagateTabIndex(indexName, index);
         }
     }
 }

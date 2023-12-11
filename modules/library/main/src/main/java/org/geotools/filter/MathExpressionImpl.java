@@ -144,12 +144,12 @@ public abstract class MathExpressionImpl extends DefaultExpression implements Bi
     protected abstract Object doArithmeticOperation(Double operand1, Double operand2);
 
     @Override
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (leftValue != null && leftValue instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) leftValue).propagateTabIndex(index);
+            ((ExpressionAbstract) leftValue).propagateTabIndex(indexName, index);
         }
         if (rightValue != null && rightValue instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) rightValue).propagateTabIndex(index);
+            ((ExpressionAbstract) rightValue).propagateTabIndex(indexName, index);
         }
     }
 

@@ -246,14 +246,14 @@ public class ContrastEnhancementImpl implements org.geotools.api.style.ContrastE
         return true;
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         for (Expression expression : options.values()) {
             if (expression instanceof ExpressionAbstract) {
-                ((ExpressionAbstract) expression).propagateTabIndex(index);
+                ((ExpressionAbstract) expression).propagateTabIndex(indexName, index);
             }
         }
         if (gamma != null && gamma instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) gamma).propagateTabIndex(index);
+            ((ExpressionAbstract) gamma).propagateTabIndex(indexName, index);
         }
     }
 }

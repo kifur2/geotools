@@ -47,12 +47,14 @@ public class OtherTextImpl implements OtherText {
     }
 
     @Override
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (text != null && text instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) text).propagateTabIndex(index);
+            ((ExpressionAbstract) text).propagateTabIndex(indexName, index);
         }
         if (location != null) {
-            location = location.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+            location =
+                    location.replaceAll(
+                            "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
         }
     }
 }

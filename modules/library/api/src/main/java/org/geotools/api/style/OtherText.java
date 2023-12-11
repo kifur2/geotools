@@ -42,5 +42,5 @@ public interface OtherText {
 
     public void setText(Expression otherText);
 
-    void propagateTabIndex(int index);
+    void propagateTabIndex(String indexName, int index);
 }

@@ -528,13 +528,17 @@ public class StyleFactoryImpl2 {
             String name,
             Description description,
             GraphicLegend legend,
+            String minIndex,
             String maxIndex,
+            String indexName,
             List<Rule> rules) {
         LoopImpl loop = new LoopImpl();
         loop.setName(name);
         loop.setDescription(description);
         loop.setLegend(legend);
+        loop.setMinIndex(minIndex);
         loop.setMaxIndex(maxIndex);
+        loop.setIndexName(indexName);
         if (rules != null) {
             for (Rule rule : rules) {
                 loop.rules().add(rule);

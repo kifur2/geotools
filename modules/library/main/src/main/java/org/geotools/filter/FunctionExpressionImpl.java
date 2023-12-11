@@ -243,11 +243,11 @@ public abstract class FunctionExpressionImpl extends org.geotools.filter.Default
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        name = name.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+    public void propagateTabIndex(String indexName, int index) {
+        name = name.replaceAll("\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
         for (Expression param : params) {
             if (param instanceof ExpressionAbstract)
-                ((ExpressionAbstract) param).propagateTabIndex(index);
+                ((ExpressionAbstract) param).propagateTabIndex(indexName, index);
         }
     }
 

@@ -64,15 +64,15 @@ public class FillImpl implements Fill, Cloneable {
                 }
 
                 @Override
-                public void propagateTabIndex(int index) {
+                public void propagateTabIndex(String indexName, int index) {
                     if (COLOR != null && COLOR instanceof ExpressionAbstract) {
-                        ((ExpressionAbstract) COLOR).propagateTabIndex(index);
+                        ((ExpressionAbstract) COLOR).propagateTabIndex(indexName, index);
                     }
                     if (BGCOLOR != null && BGCOLOR instanceof ExpressionAbstract) {
-                        ((ExpressionAbstract) BGCOLOR).propagateTabIndex(index);
+                        ((ExpressionAbstract) BGCOLOR).propagateTabIndex(indexName, index);
                     }
                     if (OPACITY != null && OPACITY instanceof ExpressionAbstract) {
-                        ((ExpressionAbstract) OPACITY).propagateTabIndex(index);
+                        ((ExpressionAbstract) OPACITY).propagateTabIndex(indexName, index);
                     }
                 }
             };
@@ -104,7 +104,7 @@ public class FillImpl implements Fill, Cloneable {
                 }
 
                 @Override
-                public void propagateTabIndex(int index) {}
+                public void propagateTabIndex(String indexName, int index) {}
             };
     private FilterFactory filterFactory;
     private Expression color = null;
@@ -342,15 +342,15 @@ public class FillImpl implements Fill, Cloneable {
     }
 
     @Override
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (color != null && color instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) color).propagateTabIndex(index);
+            ((ExpressionAbstract) color).propagateTabIndex(indexName, index);
         }
         if (opacity != null && opacity instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) opacity).propagateTabIndex(index);
+            ((ExpressionAbstract) opacity).propagateTabIndex(indexName, index);
         }
         if (graphicFill != null && graphicFill instanceof GraphicImpl) {
-            ((GraphicImpl) graphicFill).propagateTabIndex(index);
+            ((GraphicImpl) graphicFill).propagateTabIndex(indexName, index);
         }
     }
 }

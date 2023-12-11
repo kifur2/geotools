@@ -178,12 +178,14 @@ public abstract class AbstractSymbolizer implements Symbolizer {
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        if (description != null) description.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        if (description != null) description.propagateTabIndex(indexName, index);
         if (geometry != null && geometry instanceof ExpressionAbstract)
-            ((ExpressionAbstract) geometry).propagateTabIndex(index);
+            ((ExpressionAbstract) geometry).propagateTabIndex(indexName, index);
         if (name != null) {
-            name = name.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+            name =
+                    name.replaceAll(
+                            "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
         }
     }
 

@@ -562,7 +562,9 @@ public interface StyleFactory {
             String name,
             Description description,
             GraphicLegend legend,
+            String minIndex,
             String maxIndex,
+            String indexName,
             List<Rule> rules);
 
     /** @return SelectedChannelType */

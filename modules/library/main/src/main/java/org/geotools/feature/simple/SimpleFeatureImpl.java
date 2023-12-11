@@ -329,11 +329,15 @@ public class SimpleFeatureImpl implements SimpleFeature {
 
     @Override
     public Property getProperty(String name) {
-        final Integer idx = index.get(name);
+        String nameCopy = name;
+        if (nameCopy.contains("[") && nameCopy.contains("]")) {
+            nameCopy = nameCopy.substring(0, nameCopy.indexOf("["));
+        }
+        final Integer idx = index.get(nameCopy);
         if (idx == null) {
             return null;
         } else {
-            int index = idx.intValue();
+            int index = idx;
             AttributeDescriptor descriptor = featureType.getDescriptor(index);
             if (descriptor instanceof GeometryDescriptor) {
                 return new GeometryAttributeImpl(
@@ -563,6 +567,7 @@ public class SimpleFeatureImpl implements SimpleFeature {
         public void setValue(Object newValue) {
             values[index] = newValue;
         }
+
         /**
          * Override of hashCode; uses descriptor name to agree with AttributeImpl
          *

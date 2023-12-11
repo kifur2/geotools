@@ -58,6 +58,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.media.jai.Interpolation;
@@ -2917,22 +2919,58 @@ public class StreamingRenderer implements GTRenderer {
             Loop[] loopList = fts.loopList;
             if (loopList != null) {
                 for (Loop loop : loopList) {
-                    int max;
+                    int min = 0, max = 0;
+                    String property = loop.getMinIndex();
                     try {
-                        max = Integer.parseInt(loop.getMaxIndex());
+                        min = Integer.parseInt(property);
                     } catch (Exception e) {
-                        max =
-                                Integer.parseInt(
-                                        rf.feature
-                                                .getProperty(loop.getMaxIndex())
-                                                .getValue()
-                                                .toString());
+                        Object value = rf.feature.getProperty(property).getValue();
+                        if (value instanceof Object[]) {
+                            if (property.contains("[") && property.contains("]")) {
+                                Pattern pattern = Pattern.compile("\\[(\\d+)\\]");
+                                Matcher matcher = pattern.matcher(property);
+
+                                if (matcher.find()) {
+                                    min =
+                                            Integer.parseInt(
+                                                    ((Object[]) value)
+                                                            [
+                                                            Integer.parseInt(
+                                                                    matcher.group(1))].toString());
+                                }
+                            }
+                        } else if (value != null) {
+                            min = Integer.parseInt(value.toString());
+                        }
+                    }
+                    property = loop.getMaxIndex();
+                    try {
+                        max = Integer.parseInt(property);
+                    } catch (Exception e) {
+                        Object value = rf.feature.getProperty(property).getValue();
+                        if (value instanceof Object[]) {
+                            if (property.contains("[") && property.contains("]")) {
+                                Pattern pattern = Pattern.compile("\\[(\\d+)\\]");
+                                Matcher matcher = pattern.matcher(property);
+
+                                if (matcher.find()) {
+                                    max =
+                                            Integer.parseInt(
+                                                    ((Object[]) value)
+                                                            [
+                                                            Integer.parseInt(
+                                                                    matcher.group(1))].toString());
+                                }
+                            }
+                        } else if (value != null) {
+                            max = Integer.parseInt(value.toString());
+                        }
                     }
 
-                    for (int i = 0; i < max; ++i) {
+                    for (int i = min; i < max; ++i) {
                         for (Rule rule : loop.rules()) {
                             Rule copy = (Rule) ((RuleImpl) rule).clone();
-                            copy.propagateTabIndex(i);
+                            copy.propagateTabIndex(loop.getIndexName(), i);
                             List<Rule> combinedList = new ArrayList<>(Arrays.asList(ruleList));
                             combinedList.add(copy);
                             ruleList = combinedList.toArray(new Rule[0]);

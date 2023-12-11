@@ -236,19 +236,19 @@ public class PolygonSymbolizerImpl extends AbstractSymbolizer
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        super.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        super.propagateTabIndex(indexName, index);
         if (stroke != null) {
-            stroke.propagateTabIndex(index);
+            stroke.propagateTabIndex(indexName, index);
         }
         if (disp != null) {
-            disp.propagateTabIndex(index);
+            disp.propagateTabIndex(indexName, index);
         }
         if (fill != null) {
-            fill.propagateTabIndex(index);
+            fill.propagateTabIndex(indexName, index);
         }
         if (offset != null && offset instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) offset).propagateTabIndex(index);
+            ((ExpressionAbstract) offset).propagateTabIndex(indexName, index);
         }
     }
 }

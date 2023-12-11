@@ -255,11 +255,11 @@ public class PointPlacementImpl implements PointPlacement, Cloneable {
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        anchorPoint.propagateTabIndex(index);
-        displacement.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        anchorPoint.propagateTabIndex(indexName, index);
+        displacement.propagateTabIndex(indexName, index);
         if (rotation != null && rotation instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) rotation).propagateTabIndex(index);
+            ((ExpressionAbstract) rotation).propagateTabIndex(indexName, index);
         }
     }
 }

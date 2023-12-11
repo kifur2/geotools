@@ -491,19 +491,19 @@ public class RasterSymbolizerImpl extends AbstractSymbolizer
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        super.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        super.propagateTabIndex(indexName, index);
         if (symbolizer != null) {
-            symbolizer.propagateTabIndex(index);
+            symbolizer.propagateTabIndex(indexName, index);
         }
         if (shadedRelief != null) {
-            shadedRelief.propagateTabIndex(index);
+            shadedRelief.propagateTabIndex(indexName, index);
         }
         if (contrastEnhancement != null) {
-            contrastEnhancement.propagateTabIndex(index);
+            contrastEnhancement.propagateTabIndex(indexName, index);
         }
         if (opacity != null && opacity instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) opacity).propagateTabIndex(index);
+            ((ExpressionAbstract) opacity).propagateTabIndex(indexName, index);
         }
     }
 }

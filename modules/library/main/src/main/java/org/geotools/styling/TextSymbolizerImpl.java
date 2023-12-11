@@ -397,34 +397,34 @@ public class TextSymbolizerImpl extends AbstractSymbolizer implements TextSymbol
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        super.propagateTabIndex(index);
+    public void propagateTabIndex(String indexName, int index) {
+        super.propagateTabIndex(indexName, index);
         if (fill != null) {
-            fill.propagateTabIndex(index);
+            fill.propagateTabIndex(indexName, index);
         }
         if (placement != null) {
-            placement.propagateTabIndex(index);
+            placement.propagateTabIndex(indexName, index);
         }
         if (halo != null) {
-            halo.propagateTabIndex(index);
+            halo.propagateTabIndex(indexName, index);
         }
         if (otherText != null) {
-            otherText.propagateTabIndex(index);
+            otherText.propagateTabIndex(indexName, index);
         }
         if (graphic != null && graphic instanceof GraphicImpl) {
-            ((GraphicImpl) graphic).propagateTabIndex(index);
+            ((GraphicImpl) graphic).propagateTabIndex(indexName, index);
         }
         if (label != null && label instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) label).propagateTabIndex(index);
+            ((ExpressionAbstract) label).propagateTabIndex(indexName, index);
         }
         if (priority != null && priority instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) priority).propagateTabIndex(index);
+            ((ExpressionAbstract) priority).propagateTabIndex(indexName, index);
         }
         if (abxtract != null && abxtract instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) abxtract).propagateTabIndex(index);
+            ((ExpressionAbstract) abxtract).propagateTabIndex(indexName, index);
         }
         if (description != null && description instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) description).propagateTabIndex(index);
+            ((ExpressionAbstract) description).propagateTabIndex(indexName, index);
         }
     }
 }

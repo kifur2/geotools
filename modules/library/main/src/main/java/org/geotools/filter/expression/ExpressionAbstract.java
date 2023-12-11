@@ -47,7 +47,7 @@ public abstract class ExpressionAbstract implements Expression, Cloneable {
         return Converters.convert(evaluate(object), context);
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

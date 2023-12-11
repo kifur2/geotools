@@ -250,7 +250,7 @@ public class LiteralExpressionImpl extends DefaultExpression implements Literal 
     }
 
     @Override
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         // do nothing
     }
 

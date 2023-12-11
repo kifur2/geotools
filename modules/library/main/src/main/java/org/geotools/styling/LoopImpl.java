@@ -11,6 +11,8 @@ public class LoopImpl implements Loop, Cloneable {
     private GraphicLegend legend;
     private String name;
     private String maxIndex;
+    private String minIndex;
+    private String indexName;
     private DescriptionImpl description = new DescriptionImpl();
     private OnLineResource online = null;
     protected Map<String, String> options;
@@ -24,13 +26,21 @@ public class LoopImpl implements Loop, Cloneable {
     }
 
     protected LoopImpl(
-            Rule[] rules, Description desc, Graphic legend, String name, String maxIndex) {
+            Rule[] rules,
+            Description desc,
+            Graphic legend,
+            String name,
+            String minIndex,
+            String maxIndex,
+            String indexName) {
         this.rules = new ArrayList<>(Arrays.asList(rules));
         description.setAbstract(desc.getAbstract());
         description.setTitle(desc.getTitle());
         this.legend = (GraphicLegend) legend;
         this.name = name;
+        this.minIndex = minIndex;
         this.maxIndex = maxIndex;
+        this.indexName = indexName;
     }
 
     /** Copy constructor */
@@ -52,6 +62,8 @@ public class LoopImpl implements Loop, Cloneable {
         }
         this.name = loop.getName();
         this.maxIndex = loop.getMaxIndex();
+        this.minIndex = loop.getMinIndex();
+        this.indexName = loop.getIndexName();
     }
 
     @Override
@@ -120,7 +132,9 @@ public class LoopImpl implements Loop, Cloneable {
             clone.description.setAbstract(description.getAbstract());
             clone.description.setTitle(description.getTitle());
             clone.legend = legend;
+            clone.minIndex = minIndex;
             clone.maxIndex = maxIndex;
+            clone.indexName = indexName;
 
             clone.rules = new ArrayList<>(rules);
             clone.options = options;
@@ -155,8 +169,16 @@ public class LoopImpl implements Loop, Cloneable {
             result = (PRIME * result) + description.hashCode();
         }
 
+        if (minIndex != null) {
+            result = (PRIME * result) + minIndex.hashCode();
+        }
+
         if (maxIndex != null) {
             result = (PRIME * result) + maxIndex.hashCode();
+        }
+
+        if (indexName != null) {
+            result = (PRIME * result) + indexName.hashCode();
         }
 
         if (options != null) {
@@ -188,7 +210,9 @@ public class LoopImpl implements Loop, Cloneable {
 
             return Utilities.equals(name, other.name)
                     && Utilities.equals(description, other.description)
+                    && Utilities.equals(minIndex, other.minIndex)
                     && Utilities.equals(maxIndex, other.maxIndex)
+                    && Utilities.equals(indexName, other.indexName)
                     && Utilities.equals(legend, other.legend)
                     && Utilities.equals(rules, other.rules)
                     && getOptions().equals(other.getOptions());
@@ -205,9 +229,17 @@ public class LoopImpl implements Loop, Cloneable {
             buf.append(":");
             buf.append(name);
         }
+        if (minIndex != null) {
+            buf.append(", index_min=");
+            buf.append(minIndex);
+        }
         if (maxIndex != null) {
-            buf.append(":index_lower_than=");
+            buf.append(", index_lower_than=");
             buf.append(maxIndex);
+        }
+        if (maxIndex != null) {
+            buf.append(", index_name=");
+            buf.append(indexName);
         }
         buf.append("> ");
         if (rules != null) {
@@ -263,5 +295,25 @@ public class LoopImpl implements Loop, Cloneable {
     @Override
     public void setMaxIndex(String maxIndex) {
         this.maxIndex = maxIndex;
+    }
+
+    @Override
+    public String getMinIndex() {
+        return minIndex;
+    }
+
+    @Override
+    public void setMinIndex(String minIndex) {
+        this.minIndex = minIndex;
+    }
+
+    @Override
+    public String getIndexName() {
+        return indexName;
+    }
+
+    @Override
+    public void setIndexName(String indexName) {
+        this.indexName = indexName;
     }
 }

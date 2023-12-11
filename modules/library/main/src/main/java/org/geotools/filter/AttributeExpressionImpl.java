@@ -390,8 +390,10 @@ public class AttributeExpressionImpl extends DefaultExpression implements Proper
     }
 
     @Override
-    public void propagateTabIndex(int index) {
-        attPath = attPath.replaceAll("\\[([^\\]]*\\bindex\\b[^\\]]*)\\]", "[" + index + "]");
+    public void propagateTabIndex(String indexName, int index) {
+        attPath =
+                attPath.replaceAll(
+                        "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
     }
 
     @Override

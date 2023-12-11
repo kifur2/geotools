@@ -234,12 +234,12 @@ public class AnchorPointImpl implements org.geotools.api.style.AnchorPoint, Clon
         return result;
     }
 
-    public void propagateTabIndex(int index) {
+    public void propagateTabIndex(String indexName, int index) {
         if (anchorPointX != null && anchorPointX instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) anchorPointX).propagateTabIndex(index);
+            ((ExpressionAbstract) anchorPointX).propagateTabIndex(indexName, index);
         }
         if (anchorPointY != null && anchorPointY instanceof ExpressionAbstract) {
-            ((ExpressionAbstract) anchorPointY).propagateTabIndex(index);
+            ((ExpressionAbstract) anchorPointY).propagateTabIndex(indexName, index);
         }
     }
 }
