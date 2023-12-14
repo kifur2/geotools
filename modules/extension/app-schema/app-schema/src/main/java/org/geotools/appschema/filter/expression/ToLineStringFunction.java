@@ -162,4 +162,9 @@ public class ToLineStringFunction implements Function {
         }
         return (T) linestring;
     }
+
+    @Override
+    public Object clone() {
+        return new ToLineStringFunction(parameters, fallback);
+    }
 }

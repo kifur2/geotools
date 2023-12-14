@@ -22,15 +22,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.text.MessageFormat;
-import java.util.AbstractQueue;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -311,7 +303,7 @@ public final class Utilities {
     public static boolean equals(final Object object1, final Object object2) throws AssertionError {
         assert object1 == null || !object1.getClass().isArray() : object1;
         assert object2 == null || !object2.getClass().isArray() : object2;
-        return (object1 == object2) || (object1 != null && object1.equals(object2));
+        return Objects.equals(object1, object2);
     }
 
     /**

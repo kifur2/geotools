@@ -119,4 +119,12 @@ public class FeatureTypeImpl extends ComplexTypeImpl implements FeatureType {
 
         return hashCode;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        FeatureTypeImpl clone = (FeatureTypeImpl) super.clone();
+        clone.defaultGeometry = defaultGeometry;
+        clone.crs = crs;
+        return clone;
+    }
 }

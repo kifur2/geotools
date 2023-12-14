@@ -95,4 +95,9 @@ public class PolygonLabelFunction implements Function {
     public Literal getFallbackValue() {
         return fallback;
     }
+
+    @Override
+    public Object clone() {
+        return new PolygonLabelFunction(parameters, fallback);
+    }
 }

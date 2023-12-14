@@ -144,4 +144,9 @@ public class NonFeatureTypeProxy extends ComplexTypeProxy implements FeatureType
     public GeometryDescriptor getGeometryDescriptor() {
         return null;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

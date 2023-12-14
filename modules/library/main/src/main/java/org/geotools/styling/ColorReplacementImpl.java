@@ -18,6 +18,7 @@ package org.geotools.styling;
 
 import org.geotools.api.filter.expression.Function;
 import org.geotools.api.style.TraversingStyleVisitor;
+import org.geotools.filter.expression.ExpressionAbstract;
 
 /**
  * An implementation of ColorReplacement; this is a wrapper around an implementaiton of the "Recode"
@@ -54,5 +55,10 @@ public class ColorReplacementImpl implements org.geotools.api.style.ColorReplace
     @Override
     public void setRecoding(Function function) {
         this.function = function;
+    }
+
+    @Override
+    public void propagateTabIndex(String indexName, int index) {
+        if (function != null) ((ExpressionAbstract) function).propagateTabIndex(indexName, index);
     }
 }

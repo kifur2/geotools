@@ -212,4 +212,17 @@ public class StringTemplateFunction implements Function {
         sb.append(")");
         return sb.toString();
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        List<Expression> parameters = new ArrayList<>();
+        for (Expression parameter : this.parameters) {
+            parameters.add((Expression) parameter.clone());
+        }
+        StringTemplateFunction clone =
+                new StringTemplateFunction(parameters, (Literal) fallback.clone());
+        clone.staticPattern = staticPattern;
+        clone.convertedValues = convertedValues;
+        return clone;
+    }
 }

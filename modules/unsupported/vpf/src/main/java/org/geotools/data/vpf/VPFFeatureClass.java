@@ -820,4 +820,9 @@ public class VPFFeatureClass implements SimpleFeatureType {
     public Map<Object, Object> getUserData() {
         return featureType.getUserData();
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

@@ -1293,6 +1293,11 @@ public class FilterTest {
         public Literal getFallbackValue() {
             return null;
         }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
     }
 
     @Test

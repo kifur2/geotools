@@ -193,4 +193,16 @@ public class SimpleFeatureTypeImpl extends FeatureTypeImpl implements SimpleFeat
         }
         return index;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new SimpleFeatureTypeImpl(
+                getName(),
+                getAttributeDescriptors(),
+                getGeometryDescriptor(),
+                isAbstract(),
+                getRestrictions(),
+                getSuper(),
+                getDescription());
+    }
 }

@@ -175,4 +175,9 @@ public class ToEnvelopeFunction implements Function {
     public Literal getFallbackValue() {
         return fallback;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

@@ -17,10 +17,10 @@ import org.geotools.api.filter.expression.Function;
  * ExternalGraphic, the color specified in the OriginalColor sub-element, by another color as a
  * result of a recode function as defined in {@link Interpolate} .
  *
- * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
- *     Implementation Specification 1.1.0</A>
  * @author Open Geospatial Consortium
  * @author Johann Sorel (Geomatys)
+ * @version <A HREF="http://www.opengeospatial.org/standards/symbol">Symbology Encoding
+ *     Implementation Specification 1.1.0</A>
  * @since GeoAPI 2.2
  */
 public interface ColorReplacement {
@@ -44,4 +44,6 @@ public interface ColorReplacement {
 
     /** @param function Recoding function to use */
     void setRecoding(Function function);
+
+    void propagateTabIndex(String indexName, int index);
 }

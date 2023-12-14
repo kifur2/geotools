@@ -106,4 +106,12 @@ public class ExternalMarkImpl implements org.geotools.api.style.ExternalMark {
             return copy;
         }
     }
+
+    public void propagateTabIndex(String indexName, int index) {
+        if (format != null) {
+            format =
+                    format.replaceAll(
+                            "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
+        }
+    }
 }

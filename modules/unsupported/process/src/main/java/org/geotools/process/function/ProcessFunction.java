@@ -338,4 +338,10 @@ public class ProcessFunction implements Function {
         }
         return null;
     }
+
+    @Override
+    public Object clone() {
+        return new ProcessFunction(
+                processName, inputExpressions, parameters, process, fallbackValue);
+    }
 }

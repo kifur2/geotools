@@ -31,4 +31,11 @@ public class IdFinderFilterVisitor extends AbstractFinderFilterVisitor {
         found = true;
         return found;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        IdFinderFilterVisitor clone = (IdFinderFilterVisitor) super.clone();
+        clone.found = found;
+        return clone;
+    }
 }

@@ -563,6 +563,11 @@ public abstract class AbstractPreGeneralizedFeatureSourceTest {
                         public NamespaceSupport getNamespaceContext() {
                             return null;
                         }
+
+                        @Override
+                        public Object clone() throws CloneNotSupportedException {
+                            return super.clone();
+                        }
                     };
 
             SortOrder so = SortOrder.valueOf("CAT_ID");

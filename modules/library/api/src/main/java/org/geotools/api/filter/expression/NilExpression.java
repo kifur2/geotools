@@ -56,4 +56,9 @@ public final class NilExpression implements Expression, Serializable {
     private Object readResolve() throws ObjectStreamException {
         return Expression.NIL;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new NilExpression();
+    }
 }

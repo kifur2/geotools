@@ -16,6 +16,7 @@
  */
 package org.geotools.filter.function.math;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -140,5 +141,14 @@ public class ModuloFunction implements Function {
         }
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        List<Expression> parameters = new ArrayList<>();
+        for (Expression parameter : this.parameters) {
+            parameters.add((Expression) parameter.clone());
+        }
+        return new ModuloFunction(parameters, (Literal) fallback.clone());
     }
 }

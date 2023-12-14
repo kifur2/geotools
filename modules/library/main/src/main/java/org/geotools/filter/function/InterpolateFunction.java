@@ -871,4 +871,22 @@ public class InterpolateFunction implements Function {
         return Objects.hash(
                 mode, modeSpecified, method, methodSpecified, interpPoints, parameters, fallback);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+
+        List<Expression> parameters = new ArrayList<>();
+        for (Expression parameter : this.parameters) {
+            parameters.add((Expression) parameter.clone());
+        }
+        InterpolateFunction clone = new InterpolateFunction(parameters, (Literal) fallback.clone());
+
+        clone.mode = this.mode;
+        clone.modeSpecified = this.modeSpecified;
+
+        clone.method = this.method;
+        clone.methodSpecified = this.methodSpecified;
+
+        return clone;
+    }
 }

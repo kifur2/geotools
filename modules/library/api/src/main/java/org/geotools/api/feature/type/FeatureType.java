@@ -58,4 +58,6 @@ public interface FeatureType extends ComplexType {
      * @return The coordinate referencing system, or <code>null</code>.
      */
     CoordinateReferenceSystem getCoordinateReferenceSystem();
+
+    Object clone() throws CloneNotSupportedException;
 }

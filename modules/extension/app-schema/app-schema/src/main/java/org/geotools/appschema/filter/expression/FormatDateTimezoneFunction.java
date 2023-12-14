@@ -127,4 +127,9 @@ public class FormatDateTimezoneFunction implements Function {
     public List<Expression> getParameters() {
         return Collections.unmodifiableList(parameters);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

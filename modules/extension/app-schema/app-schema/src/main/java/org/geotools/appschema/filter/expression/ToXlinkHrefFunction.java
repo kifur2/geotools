@@ -94,4 +94,9 @@ public class ToXlinkHrefFunction implements Function {
                         ComplexFeatureConstants.STRING_KEY,
                         parameters.get(0).evaluate(object, String.class));
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new ToXlinkHrefFunction(parameters, fallback);
+    }
 }

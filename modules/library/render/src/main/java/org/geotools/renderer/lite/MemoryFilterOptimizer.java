@@ -387,6 +387,11 @@ class MemoryFilterOptimizer extends DuplicatingFilterVisitor {
         public String toString() {
             return delegate.toString();
         }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
     }
 
     /**
@@ -436,6 +441,11 @@ class MemoryFilterOptimizer extends DuplicatingFilterVisitor {
         @Override
         public Object accept(ExpressionVisitor visitor, Object extraData) {
             return delegate.accept(visitor, extraData);
+        }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
         }
     }
 }

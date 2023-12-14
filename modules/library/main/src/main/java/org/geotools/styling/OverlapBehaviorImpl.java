@@ -69,4 +69,9 @@ public class OverlapBehaviorImpl extends ConstantExpression implements OverlapBe
     public void accept(StyleVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

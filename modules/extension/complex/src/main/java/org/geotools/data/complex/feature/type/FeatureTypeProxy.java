@@ -42,4 +42,9 @@ public class FeatureTypeProxy extends ComplexTypeProxy implements FeatureType {
     public GeometryDescriptor getGeometryDescriptor() {
         return ((FeatureType) getSubject()).getGeometryDescriptor();
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

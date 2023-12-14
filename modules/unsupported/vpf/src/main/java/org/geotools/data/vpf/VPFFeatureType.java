@@ -325,4 +325,9 @@ public class VPFFeatureType implements SimpleFeatureType {
     public int indexOf(Name name) {
         return featureClass.indexOf(name);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

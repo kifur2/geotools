@@ -537,6 +537,11 @@ public class ReprojectingFilterVisitor extends DuplicatingFilterVisitor {
         }
 
         @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+
+        @Override
         public Object evaluate(Object object) {
             Object value = delegate.evaluate(object);
             return reproject(value, propertyCrs);
@@ -559,5 +564,12 @@ public class ReprojectingFilterVisitor extends DuplicatingFilterVisitor {
         public FunctionName getFunctionName() {
             return delegate.getFunctionName();
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ReprojectingFilterVisitor clone = (ReprojectingFilterVisitor) super.clone();
+        clone.featureType = (FeatureType) featureType.clone();
+        return clone;
     }
 }

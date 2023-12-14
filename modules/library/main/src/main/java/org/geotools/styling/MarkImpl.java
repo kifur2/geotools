@@ -27,6 +27,7 @@ import org.geotools.api.style.Symbol;
 import org.geotools.api.style.TraversingStyleVisitor;
 import org.geotools.api.util.Cloneable;
 import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.filter.expression.ExpressionAbstract;
 import org.geotools.util.factory.GeoTools;
 
 /**
@@ -302,5 +303,21 @@ public class MarkImpl implements Mark, Cloneable, Symbol {
             return copy;
         }
         return null;
+    }
+
+    @Override
+    public void propagateTabIndex(String indexName, int index) {
+        if (fill != null) {
+            fill.propagateTabIndex(indexName, index);
+        }
+        if (stroke != null) {
+            stroke.propagateTabIndex(indexName, index);
+        }
+        if (external != null) {
+            external.propagateTabIndex(indexName, index);
+        }
+        if (wellKnownName != null) {
+            ((ExpressionAbstract) wellKnownName).propagateTabIndex(indexName, index);
+        }
     }
 }

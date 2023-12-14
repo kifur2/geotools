@@ -52,7 +52,7 @@ import org.geotools.util.Converters;
  *   <li>Literal: (Optional) succeeding or preceding
  * </ol>
  *
- * In reality any expression will do.
+ * <p>In reality any expression will do.
  *
  * @author Jody Garnett
  * @author Johann Sorel (Geomatys)
@@ -314,5 +314,28 @@ public class CategorizeFunction implements Function {
         result = 31 * result + Arrays.hashCode(values);
         result = 31 * result + Arrays.hashCode(convertedValues);
         return result;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+
+        List<Expression> parameters = new ArrayList<>();
+        for (Expression parameter : this.parameters) {
+            parameters.add((Expression) parameter.clone());
+        }
+        CategorizeFunction clone = new CategorizeFunction(parameters, (Literal) fallback.clone());
+        clone.staticTable = staticTable;
+        clone.thresholds = thresholds;
+
+        clone.values = new Expression[values.length];
+        for (int i = 0; i < values.length; ++i) {
+            clone.values[i] = (Expression) values[i].clone();
+        }
+        clone.convertedValues = new Expression[convertedValues.length];
+        System.arraycopy(convertedValues, 0, clone.convertedValues, 0, convertedValues.length);
+        clone.convertedValuesContext = convertedValuesContext;
+        clone.belongsTo = belongsTo;
+
+        return clone;
     }
 }

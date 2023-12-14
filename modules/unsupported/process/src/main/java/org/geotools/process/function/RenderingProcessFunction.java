@@ -92,4 +92,14 @@ class RenderingProcessFunction extends ProcessFunction implements RenderingTrans
                     "Failed to customize the reader parameters, error is: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public Object clone() {
+        return new RenderingProcessFunction(
+                processName,
+                inputExpressions,
+                parameters,
+                (RenderingProcess) process,
+                fallbackValue);
+    }
 }

@@ -165,4 +165,9 @@ public class ToDirectPositionFunction implements Function {
 
         return (T) geom;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new ToDirectPositionFunction(parameters, fallback);
+    }
 }

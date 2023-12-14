@@ -158,4 +158,9 @@ class ParameterFunction implements Function {
         } else if (!parameters.equals(other.parameters)) return false;
         return true;
     }
+
+    @Override
+    public Object clone() {
+        return new ParameterFunction(fallbackValue, parameters);
+    }
 }

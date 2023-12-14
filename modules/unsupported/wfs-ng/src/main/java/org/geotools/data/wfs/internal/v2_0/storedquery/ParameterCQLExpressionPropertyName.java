@@ -57,4 +57,9 @@ public abstract class ParameterCQLExpressionPropertyName implements PropertyName
     public NamespaceSupport getNamespaceContext() {
         return null;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

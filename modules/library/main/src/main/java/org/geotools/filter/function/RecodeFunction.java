@@ -228,4 +228,19 @@ public class RecodeFunction implements Function {
         return Objects.hash(
                 parameters, staticTable, fastLookup, lastKeyType, lastContextType, fallback);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        List<Expression> parameters = new ArrayList<>();
+        for (Expression parameter : this.parameters) {
+            parameters.add((Expression) parameter.clone());
+        }
+        RecodeFunction clone = new RecodeFunction(parameters, (Literal) fallback.clone());
+        clone.staticTable = staticTable;
+        clone.fastLookup = fastLookup;
+        clone.lastKeyType = lastKeyType;
+        clone.lastContextType = lastContextType;
+
+        return clone;
+    }
 }

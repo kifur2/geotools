@@ -100,6 +100,11 @@ public final class JdbcMultipleValueEncoder extends DuplicatingFilterVisitor {
             }
             return null;
         }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
     }
 
     private FilterToSQL createFilterToSQL(JdbcMultipleValue multipleValue) {

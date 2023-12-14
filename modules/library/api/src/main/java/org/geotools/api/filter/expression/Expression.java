@@ -75,4 +75,6 @@ public interface Expression {
      * <pre>return visitor.{@linkplain ExpressionVisitor#visit visit}(this, extraData);</pre>
      */
     Object accept(ExpressionVisitor visitor, Object extraData);
+
+    Object clone() throws CloneNotSupportedException;
 }

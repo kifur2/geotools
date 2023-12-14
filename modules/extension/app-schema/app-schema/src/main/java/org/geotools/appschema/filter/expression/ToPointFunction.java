@@ -193,4 +193,10 @@ public class ToPointFunction implements Function {
         }
         point.setUserData(userData);
     }
+
+    @Override
+    public Object clone() {
+        return new ToPointFunction(
+                new ArrayList<>(parameters), (Literal) fallback.evaluate(null, Object.class));
+    }
 }

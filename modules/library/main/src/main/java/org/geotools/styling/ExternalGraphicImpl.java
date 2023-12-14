@@ -278,4 +278,29 @@ public class ExternalGraphicImpl
         }
         return null;
     }
+
+    public void propagateTabIndex(String indexName, int index) {
+        if (colorReplacements != null) {
+            for (ColorReplacement replacement : colorReplacements) {
+                replacement.propagateTabIndex(indexName, index);
+            }
+        }
+        if (customProps != null) {
+            for (Object value : customProps.values()) {
+                if (value instanceof GraphicalSymbol) {
+                    ((GraphicalSymbol) value).propagateTabIndex(indexName, index);
+                }
+            }
+        }
+        if (uri != null) {
+            uri =
+                    uri.replaceAll(
+                            "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
+        }
+        if (format != null) {
+            format =
+                    format.replaceAll(
+                            "\\[([^\\]]*\\b" + indexName + "\\b[^\\]]*)\\]", "[" + index + "]");
+        }
+    }
 }

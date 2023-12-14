@@ -295,9 +295,18 @@ public class GraphicImpl
         GraphicImpl clone;
 
         try {
-            clone = (GraphicImpl) super.clone();
-            clone.graphics.clear();
-            clone.graphics.addAll(graphics);
+
+            clone = new GraphicImpl();
+            if (anchor != null) clone.anchor = (AnchorPointImpl) anchor.clone();
+            if (rotation != null) clone.rotation = (Expression) rotation.clone();
+            if (gap != null) clone.gap = (Expression) gap.clone();
+            if (initialGap != null) clone.initialGap = (Expression) initialGap.clone();
+            if (size != null) clone.size = (Expression) size.clone();
+            if (opacity != null) clone.opacity = (Expression) opacity.clone();
+            if (displacement != null) clone.displacement = (DisplacementImpl) displacement.clone();
+            for (GraphicalSymbol graphic : graphics) {
+                clone.graphics.add((GraphicalSymbol) ((Cloneable) graphic).clone());
+            }
 
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e); // this should never happen.
@@ -508,6 +517,9 @@ public class GraphicImpl
         }
         if (opacity != null && opacity instanceof ExpressionAbstract) {
             ((ExpressionAbstract) opacity).propagateTabIndex(indexName, index);
+        }
+        for (GraphicalSymbol graphic : graphics) {
+            graphic.propagateTabIndex(indexName, index);
         }
     }
 }

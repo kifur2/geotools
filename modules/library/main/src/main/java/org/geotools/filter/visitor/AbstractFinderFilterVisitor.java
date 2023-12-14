@@ -250,6 +250,11 @@ public abstract class AbstractFinderFilterVisitor implements FilterVisitor, Expr
                     public NamespaceSupport getNamespaceContext() {
                         return null;
                     }
+
+                    @Override
+                    public Object clone() throws CloneNotSupportedException {
+                        return super.clone();
+                    }
                 };
         property.accept(this, data);
         if (found) return found;
@@ -481,5 +486,10 @@ public abstract class AbstractFinderFilterVisitor implements FilterVisitor, Expr
     @Override
     public Object visit(NativeFilter filter, Object data) {
         return found;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
